@@ -61,19 +61,15 @@ const education = [
 
 export default function AboutPage() {
   return (
-    <div className="container-site pt-36 pb-8 sm:pt-44">
+    <div className="container-site pt-28 pb-8 sm:pt-32">
       {/* Story */}
-      <div className="grid gap-14 lg:grid-cols-12">
+      <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
         <header className="lg:col-span-7">
-          <Reveal immediate>
-            <p className="eyebrow">About me</p>
-          </Reveal>
           <RevealLines
             immediate
-            delay={0.1}
             as="h1"
-            className="display-xl mt-6 font-semibold text-fg"
-            lines={["Built in", "New Jersey.", "First in the family."]}
+            className="display-xl max-w-[10ch] font-semibold text-fg"
+            lines={["First generation.", "From New Jersey."]}
           />
           <Reveal immediate delay={0.45}>
             <div className="prose-measure mt-10 flex flex-col gap-5">
@@ -102,9 +98,9 @@ export default function AboutPage() {
         </header>
 
         {/* Photo */}
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-5 lg:justify-self-end">
           <Reveal immediate delay={0.3}>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[6px] border border-line bg-ink-800">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[6px] border border-line bg-ink-800 lg:mx-0">
               <Image
                 src="/about/headshot.jpg"
                 alt={`${site.fullName}, founder of ${site.brand}`}
