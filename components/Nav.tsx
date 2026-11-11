@@ -12,6 +12,7 @@ const navLinks = [
   { label: "Work", href: "/projects" },
   { label: "Research", href: "/research" },
   { label: "Studio", href: "/about" },
+  { label: "Resume", href: "/resume" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -86,7 +87,7 @@ export function Nav() {
 
           {/* Desktop links */}
           <div className="hidden items-center gap-9 md:flex">
-            {navLinks.slice(0, 3).map((link) => {
+            {navLinks.slice(0, 4).map((link) => {
               const active = isActive(pathname, link.href);
               return (
                 <Link

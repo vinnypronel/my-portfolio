@@ -17,7 +17,8 @@
   /* Text */
   --color-fg: #f2f2f5;
   --color-fg-soft: #a1a1aa;
-  --color-fg-faint: #6b6b75;
+  /* 4.5:1 or better on every surface above, so 11px labels pass WCAG AA */
+  --color-fg-faint: #7e7e89;
 
   /* Lines */
   --color-line: rgb(255 255 255 / 0.08);

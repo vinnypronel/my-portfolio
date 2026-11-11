@@ -14,7 +14,11 @@ export function Marquee({
 }) {
   const doubled = [...items, ...items];
   return (
-    <div className={`marquee relative overflow-hidden ${className}`} aria-label={label}>
+    <div
+      role="group"
+      className={`marquee relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)] ${className}`}
+      aria-label={label}
+    >
       <div className="marquee-track gap-14 pr-14">
         {doubled.map((item, i) => (
           <span

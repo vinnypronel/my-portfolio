@@ -23,7 +23,6 @@ Deploys to Vercel with zero extra config (`npm run build` locally to verify).
 | Name, email, socials, domain, resume path | `data/site.ts` |
 | Category colors, labels, hover clips | `data/categories.ts` + tokens in `app/globals.css` |
 | Design tokens (colors, fonts, shadows) | `app/globals.css` (`@theme` block) |
-| Design-system reference page | `/styleguide` (not linked in nav) |
 
 ## Background video
 
@@ -41,7 +40,7 @@ Requires `ffmpeg` on PATH. Re-run it after dropping in new source clips:
 powershell -File scripts/process-videos.ps1
 ```
 
-`components/BackgroundVideo.tsx` renders them: nothing downloads until the clip
+`components/video/` (`HeroVideo`, `AmbientVideo`, `ScrubVideo`) renders them: nothing downloads until the clip
 nears the viewport, playback pauses off-screen, and under
 `prefers-reduced-motion` the poster frame renders instead of any video.
 

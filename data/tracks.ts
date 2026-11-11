@@ -37,7 +37,7 @@ export const tracks: Track[] = [
     index: "03",
     title: "Research and data",
     blurb:
-      "Published HCI and data analysis work. The same rigor that goes into a study goes into every build.",
+      "HCI and data analysis work, presented at GMiS and the UR2PhD showcase. The same rigor that goes into a study goes into every build.",
     points: ["HCI study design", "Data pipelines", "Visualization"],
     href: "/research",
     video: "/video/track-research.mp4",

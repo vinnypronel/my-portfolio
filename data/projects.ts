@@ -179,6 +179,7 @@ export const projects: Project[] = [
       "VSL production pipeline established for client outreach",
     ],
     links: [{ label: "Visit the live site", href: "https://adzio.io" }],
+    image: "/projects/adzio.png",
     imageAlt: "Screenshot of the Adzio agency website",
   },
   {

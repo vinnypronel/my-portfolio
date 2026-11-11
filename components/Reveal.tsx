@@ -49,12 +49,14 @@ export function Reveal({
 export function RevealLines({
   lines,
   as: Tag = "h1",
+  id,
   className = "",
   delay = 0,
   immediate = false,
 }: {
   lines: ReactNode[];
   as?: "h1" | "h2" | "h3" | "p";
+  id?: string;
   className?: string;
   delay?: number;
   immediate?: boolean;
@@ -62,7 +64,7 @@ export function RevealLines({
   const reduce = useReducedMotion();
 
   return (
-    <Tag className={className}>
+    <Tag id={id} className={className}>
       {lines.map((line, i) => (
         <span key={i} className="line-mask">
           <motion.span

@@ -21,18 +21,25 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: { name?: string; email?: string; message?: string };
+  let body: { name?: unknown; email?: unknown; message?: unknown; company?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ ok: false, reason: "invalid-json" }, { status: 400 });
   }
 
-  const name = (body.name ?? "").trim().slice(0, 200);
-  const email = (body.email ?? "").trim().slice(0, 200);
-  const message = (body.message ?? "").trim().slice(0, 5000);
+  // Honeypot, checked here too: bots that post straight to the API skip the
+  // client check. Answer "ok" so they don't retry.
+  if (body.company) return NextResponse.json({ ok: true });
 
-  if (!name || !email || !message || !email.includes("@")) {
+  const str = (v: unknown, max: number) =>
+    (typeof v === "string" ? v : "").trim().slice(0, max);
+  // Strip line breaks from anything that lands in an email header.
+  const name = str(body.name, 200).replace(/[\r\n]+/g, " ");
+  const email = str(body.email, 200);
+  const message = str(body.message, 5000);
+
+  if (!name || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ ok: false, reason: "invalid-fields" }, { status: 400 });
   }
 

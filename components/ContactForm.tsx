@@ -25,7 +25,8 @@ export function ContactForm() {
     const message = String(data.get("message") ?? "").trim();
 
     // Honeypot: bots fill it, humans never see it
-    if (String(data.get("company") ?? "")) return;
+    const company = String(data.get("company") ?? "");
+    if (company) return;
 
     if (!name || !email || !message) {
       setError("Please fill out all three fields.");
@@ -37,7 +38,7 @@ export function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, company }),
       });
       if (res.ok) {
         setStatus("sent");

@@ -65,7 +65,7 @@ export function Hero() {
           <Reveal immediate delay={0.75} y={16} className="lg:col-span-6">
             <p className="prose-measure">
               {site.brand} designs and builds production Next.js sites and
-              booking platforms for real businesses, with the rigor of published
+              booking platforms for real businesses, with the rigor of presented
               research behind every decision.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
