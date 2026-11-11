@@ -125,7 +125,7 @@ export default function AboutPage() {
 
       {/* Roles */}
       <section aria-labelledby="roles-title" className="mt-32">
-        <SectionHeading eyebrow="Roles" lines={["Five hats,", "worn this year."]} />
+        <SectionHeading id="roles-title" eyebrow="Roles" lines={["Five hats,", "worn this year."]} />
         <ul className="mt-12 flex flex-col divide-y divide-line border-y border-line">
           {roles.map((role, i) => (
             <li key={role.title}>
@@ -154,7 +154,7 @@ export default function AboutPage() {
 
       {/* Skills */}
       <section aria-labelledby="skills-title" className="mt-32">
-        <SectionHeading eyebrow="Toolbox" lines={["The stack,", "organized."]} />
+        <SectionHeading id="skills-title" eyebrow="Toolbox" lines={["The stack,", "organized."]} />
         <Reveal delay={0.1}>
           <div className="mt-12">
             <SkillsGrid />
@@ -164,7 +164,7 @@ export default function AboutPage() {
 
       {/* Education */}
       <section aria-labelledby="education-title" className="mt-32">
-        <SectionHeading eyebrow="Education and training" lines={["Programs that", "shaped the work."]} />
+        <SectionHeading id="education-title" eyebrow="Education and training" lines={["Programs that", "shaped the work."]} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <ul className="flex flex-col divide-y divide-line border-y border-line lg:col-span-7">
             {education.map((item, i) => (

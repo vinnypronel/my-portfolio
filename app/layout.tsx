@@ -29,6 +29,24 @@ export const metadata: Metadata = {
   },
 };
 
+/** Structured data so search results can show the studio and its owner. */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: site.brand,
+  url: site.url,
+  description: site.positioning,
+  email: site.email,
+  areaServed: site.location,
+  founder: {
+    "@type": "Person",
+    name: site.fullName,
+    jobTitle: "Web developer and researcher",
+    sameAs: Object.values(site.socials),
+  },
+  sameAs: Object.values(site.socials),
+};
+
 export const viewport: Viewport = {
   themeColor: "#050507",
   colorScheme: "dark",
@@ -50,6 +68,10 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
         <SmoothScroll />
         <Cursor />
         <Nav />

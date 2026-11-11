@@ -83,7 +83,7 @@ export function Footer() {
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] tracking-[0.08em] text-fg-faint uppercase">
           <p>
-            © 2026 {site.fullName} · {site.location}
+            © {new Date().getFullYear()} {site.fullName} · {site.location}
           </p>
           <p>Designed and built from scratch</p>
         </div>

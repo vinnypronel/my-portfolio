@@ -11,7 +11,7 @@ export const site = {
   role: "Digital studio",
   tagline: "Websites and platforms that earn their keep.",
   positioning:
-    "pronelweb is the digital studio of Vincent Pronel: production Next.js sites and booking platforms for real businesses, backed by published HCI and data research.",
+    "pronelweb is the digital studio of Vincent Pronel: production Next.js sites and booking platforms for real businesses, backed by HCI and data research presented at GMiS and UR2PhD.",
   email: "vinnypronel050@gmail.com",
   location: "New Jersey",
   // PLACEHOLDER: replace with your real production domain once deployed

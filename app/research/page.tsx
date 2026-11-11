@@ -32,7 +32,7 @@ export default function ResearchPage() {
         <Reveal immediate delay={0.4}>
           <p className="prose-measure mt-8">
             Two completed studies, one in data-driven economic analysis and one
-            in human-AI interaction, plus an active summer project. Full
+            in human-AI interaction, plus one study still in progress. Full
             methodology included, because rigor is the point.
           </p>
         </Reveal>

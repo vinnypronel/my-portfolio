@@ -4,11 +4,14 @@ import { RevealLines } from "./Reveal";
 /** Eyebrow + display heading, with an optional "view all" style link. */
 export function SectionHeading({
   eyebrow,
+  id,
   title,
   lines,
   link,
 }: {
   eyebrow: string;
+  /** id for the h2, so a parent section can point aria-labelledby at it */
+  id?: string;
   /** single-line title; or pass `lines` for a deliberate multi-line reveal */
   title?: string;
   lines?: string[];
@@ -21,6 +24,7 @@ export function SectionHeading({
         <p className="eyebrow">{eyebrow}</p>
         <RevealLines
           as="h2"
+          id={id}
           lines={content}
           className="display-lg mt-5 font-semibold text-fg"
         />
