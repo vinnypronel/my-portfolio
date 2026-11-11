@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   Design tokens: the whole visual system lives here.
+   Base: warm paper + ink (clean/premium editorial layer)
+   Signature accent: ultramarine (CTAs, stats, active states)
+   Category accents: research teal · freelance coral · leadership magenta
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  /* Base */
+  --color-paper: #fbf8f2;
+  --color-paper-deep: #f3ede0;
+  --color-ink: #1b150d;
+  --color-ink-soft: #57503f;
+  --color-ink-faint: #756c59; /* 4.9:1 on paper, AA for the small captions that use it */
+  --color-line: #e6ddc9;
+  --color-cream: #fdfbf7;
+
+  /* Signature accent: ultramarine */
+  --color-accent: #2c24c8;
+  --color-accent-deep: #1e1789;
+
+  /* Category accents (AA-safe as text on paper) */
+  --color-research: #0b7a7e;
+  --color-freelance: #bc4413;
+  --color-leadership: #a82577;
+
+  /* Bright variants for use on dark (ink) surfaces */
+  --color-research-bright: #4fd8dd;
+  --color-freelance-bright: #ff9a6b;
+  --color-leadership-bright: #f487cd;
+  --color-accent-bright: #a5a0ff;
+
+  /* Typography, wired to next/font variables in app/layout.tsx */
+  --font-display: var(--font-fraunces), "Georgia", serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+
+  /* Elevation */
+  --shadow-lift: 0 24px 48px -16px rgb(27 21 13 / 0.18),
+    0 4px 12px -4px rgb(27 21 13 / 0.08);
+  --shadow-card: 0 1px 2px rgb(27 21 13 / 0.05);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Base layer ─────────────────────────────────────────────── */
+@layer base {
+  html {
+    @apply scroll-pt-24;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Faint paper grain: atmosphere without clutter */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+}
+
+/* ── Reusable component classes ─────────────────────────────── */
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-300;
+  }
+
+  /* Use as `class="btn btn-primary"` / `class="btn btn-outline"` */
+  .btn-primary {
+    @apply bg-accent text-cream hover:bg-accent-deep;
+  }
+
+  .btn-outline {
+    @apply border border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-cream;
+  }
+
+  .btn-on-dark {
+    @apply bg-cream text-ink hover:bg-paper-deep;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -8px rgb(44 36 200 / 0.45);
+    }
+    .btn-outline:hover,
+    .btn-on-dark:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.22em] uppercase text-ink-soft;
+  }
+
+  .prose-measure {
+    @apply max-w-[62ch] text-[1.0625rem] leading-[1.75] text-ink-soft;
+  }
+
+  .hairline {
+    @apply border-line;
+  }
+}
+
+/* ── Motion safety ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

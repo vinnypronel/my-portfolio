@@ -1,0 +1,3 @@
+# Original Gemini clips. Only the processed loops in public/video/ are served,
+# so there's no reason to upload ~15MB of sources on every deploy.
+Video Backgrounds/
