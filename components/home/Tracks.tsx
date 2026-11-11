@@ -34,7 +34,7 @@ export function Tracks() {
             >
               <div
                 className={`absolute inset-0 -z-10 transition-opacity duration-700 ${
-                  canHover ? (on ? "opacity-100" : "opacity-35") : "opacity-80"
+                  canHover ? (on ? "opacity-100" : "opacity-50") : "opacity-80"
                 }`}
               >
                 <AmbientVideo

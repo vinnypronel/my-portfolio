@@ -1,14 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
 /**
- * Decorative looping background video for below-the-fold sections.
+ * Decorative or walkthrough loop for below-the-fold content.
  *
- *  - nothing downloads until the element is near the viewport (preload="none"
- *    plus a rect check that sets `src` on first approach)
- *  - playback pauses whenever it scrolls out of view
+ * Built for instant starts with no wasted bytes:
+ *  - nothing downloads until the element is within `margin` px of the
+ *    viewport; at that point `src` is attached with preload="auto", so the
+ *    first seconds are already buffered by the time the clip scrolls into view
+ *  - playback starts on entering the viewport and pauses on leaving, so an
+ *    off-screen clip never decodes
+ *  - `eager` (case-study heroes) attaches the source on mount
  *  - `mode="manual"` defers play/pause to the `active` prop (hover cards)
  *  - under prefers-reduced-motion no video loads at all; the poster renders
  *  - always aria-hidden: these carry no information
@@ -21,6 +26,8 @@ export function AmbientVideo({
   mode = "in-view",
   active = false,
   parallax = 0,
+  eager = false,
+  margin = 600,
 }: {
   src: string;
   poster: string;
@@ -33,12 +40,16 @@ export function AmbientVideo({
   active?: boolean;
   /** percent of vertical drift across the scroll range; 0 disables */
   parallax?: number;
+  /** attach the source immediately instead of waiting for approach */
+  eager?: boolean;
+  /** how far outside the viewport (px) the source is attached */
+  margin?: number;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [inView, setInView] = useState(false);
-  const [canLoad, setCanLoad] = useState(false);
-  const reduce = useReducedMotion();
+  const [canLoad, setCanLoad] = useState(eager);
+  const reduce = useReducedMotionSafe();
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
@@ -50,16 +61,16 @@ export function AmbientVideo({
     const el = wrapRef.current;
     if (!el || reduce) return;
 
-    const MARGIN = 300;
     const check = () => {
       const r = el.getBoundingClientRect();
-      const visible =
-        r.bottom > -MARGIN &&
-        r.top < window.innerHeight + MARGIN &&
+      const near =
+        r.bottom > -margin &&
+        r.top < window.innerHeight + margin &&
         r.right > 0 &&
         r.left < window.innerWidth;
+      const visible = r.bottom > 0 && r.top < window.innerHeight;
       setInView((prev) => (prev === visible ? prev : visible));
-      if (visible) setCanLoad(true);
+      if (near) setCanLoad(true);
     };
 
     check();
@@ -69,7 +80,7 @@ export function AmbientVideo({
       window.removeEventListener("scroll", check);
       window.removeEventListener("resize", check);
     };
-  }, [reduce]);
+  }, [reduce, margin]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -85,7 +96,9 @@ export function AmbientVideo({
     <div ref={wrapRef} aria-hidden className={`overflow-hidden ${className}`}>
       {reduce ? (
         <div
-          className={`${videoClassName} bg-cover bg-center`}
+          className={`${videoClassName} bg-center bg-no-repeat ${
+            videoClassName.includes("object-contain") ? "bg-contain" : "bg-cover"
+          }`}
           style={{ backgroundImage: `url(${poster})` }}
         />
       ) : (
@@ -96,7 +109,9 @@ export function AmbientVideo({
           muted
           loop
           playsInline
-          preload="none"
+          disablePictureInPicture
+          disableRemotePlayback
+          preload={canLoad ? "auto" : "none"}
           tabIndex={-1}
           className={videoClassName}
           style={parallax ? { y } : undefined}

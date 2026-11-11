@@ -98,11 +98,26 @@ export function ScrubVideo({
       }, section);
     };
 
-    if (video.readyState >= 1) build();
-    else video.addEventListener("loadedmetadata", build, { once: true });
+    // Build once: on metadata, on a load error (unsupported codec, offline),
+    // or after a short timeout, so the copy still steps through on scroll
+    // even when the clip never arrives.
+    let built = false;
+    const buildOnce = () => {
+      if (built) return;
+      built = true;
+      build();
+    };
+    const timer = window.setTimeout(buildOnce, 2500);
+    if (video.readyState >= 1) buildOnce();
+    else {
+      video.addEventListener("loadedmetadata", buildOnce, { once: true });
+      video.addEventListener("error", buildOnce, { once: true });
+    }
 
     return () => {
-      video.removeEventListener("loadedmetadata", build);
+      window.clearTimeout(timer);
+      video.removeEventListener("loadedmetadata", buildOnce);
+      video.removeEventListener("error", buildOnce);
       ctx?.revert();
     };
   }, [reduce, canLoad, steps.length]);

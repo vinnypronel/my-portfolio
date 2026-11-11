@@ -48,7 +48,7 @@ export function SocialLinks() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${link.label} (opens in a new tab)`}
-            className="flex size-11 items-center justify-center rounded-[4px] border border-line text-fg-soft transition-all duration-300 hover:border-accent hover:text-accent motion-safe:hover:shadow-glow-soft"
+            className="flex size-11 items-center justify-center rounded-[4px] border border-line text-fg-soft transition-all duration-300 hover:border-accent hover:text-accent"
           >
             <svg viewBox="0 0 24 24" aria-hidden focusable="false" fill="currentColor" className="size-[18px]">
               {ICONS[link.key]}

@@ -74,8 +74,11 @@ export default async function ProjectDetailPage({
 
       {/* Hero visual, full width of the container, wider than the copy */}
       <Reveal immediate delay={0.45} className="container-site mt-14">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-[6px] border border-line bg-ink-800 sm:aspect-[21/10]">
-          <ProjectVisual project={project} priority sizes="(max-width: 1440px) 100vw, 1440px" />
+        <div
+          className="relative aspect-[16/10] overflow-hidden rounded-[6px] border border-line bg-ink-800 sm:aspect-[21/10]"
+          style={project.videoAspect ? { aspectRatio: project.videoAspect } : undefined}
+        >
+          <ProjectVisual project={project} variant="hero" priority sizes="(max-width: 1440px) 100vw, 1440px" />
         </div>
       </Reveal>
 
@@ -161,7 +164,7 @@ export default async function ProjectDetailPage({
             <Reveal>
               <Link
                 href={project.researchAnchor}
-                className="group flex items-center justify-between gap-4 rounded-[6px] border border-line p-6 transition-colors duration-300 hover:border-accent motion-safe:hover:shadow-glow-soft"
+                className="group flex items-center justify-between gap-4 rounded-[6px] border border-line p-6 transition-colors duration-300 hover:border-accent"
               >
                 <div>
                   <p className="font-mono text-[12px] tracking-[0.12em] text-fg uppercase">

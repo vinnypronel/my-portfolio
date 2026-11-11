@@ -27,9 +27,10 @@ export function CaseStudyRow({
         className={`relative aspect-[16/10] overflow-hidden rounded-[6px] border border-line bg-ink-800 lg:col-span-7 ${
           flip ? "lg:order-2" : ""
         }`}
+        style={project.videoAspect ? { aspectRatio: project.videoAspect } : undefined}
       >
         <div className="absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.04]">
-          <ProjectVisual project={project} sizes="(max-width: 1024px) 100vw, 58vw" />
+          <ProjectVisual project={project} variant="hero" sizes="(max-width: 1024px) 100vw, 58vw" />
         </div>
         {/* Cyan hairline sweeps across the bottom edge on hover */}
         <span

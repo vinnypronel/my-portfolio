@@ -1,8 +1,9 @@
-# Vinny · Portfolio
+| Above-the-fold entrances (CSS, no hydration wait) | `app/globals.css` (`.rise`, `.line-up`) |
+| Route fade transition, custom scrollbar, stacked sections, takeover menu | `components/RouteTransition.tsx`, `components/Scrollbar.tsx`, `components/StackSections.tsx`, `components/Nav.tsx`, CSS at the end of `app/globals.css` |# pronelweb · Portfolio
 
-Personal portfolio: research, freelance client work, and hackathons & leadership, in one place.
+The studio site for pronelweb (Vincent Pronel): client work, research, and hackathon and leadership work, on a dark cinematic system.
 
-**Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 · Framer Motion · GSAP
+**Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 · Framer Motion · GSAP (ScrollTrigger) · Lenis · Geist
 
 ## Run it
 
@@ -17,49 +18,72 @@ Deploys to Vercel with zero extra config (`npm run build` locally to verify).
 
 | Thing | File |
 |---|---|
-| All project content | `data/projects.ts` |
+| All project content, images, walkthrough clips | `data/projects.ts` |
 | Research narratives | `data/research.ts` |
-| Skills + home stats | `data/skills.ts` |
-| Name, email, socials, domain, resume path | `data/site.ts` |
-| Category colors, labels, hover clips | `data/categories.ts` + tokens in `app/globals.css` |
-| Design tokens (colors, fonts, shadows) | `app/globals.css` (`@theme` block) |
+| Service tracks on the home page | `data/tracks.ts` |
+| Skills | `data/skills.ts` |
+| Brand, email, socials, domain, client marquee, resume path | `data/site.ts` |
+| Design tokens (colors, fonts, motion) | `app/globals.css` (`@theme` block) |
+| Page curtain and above-the-fold entrances (CSS, no hydration wait) | `app/globals.css` (`.curtain`, `.rise`, `.line-up`) + `app/template.tsx` |
 
-## Background video
+## Design rules baked in
 
-Source clips from Gemini live in `Video Backgrounds/` (not served). The web-ready
-loops in `public/video/` are generated from them by
-`scripts/process-videos.ps1`, which:
+- One accent, `#00E5FF`, used flat and only on interactive states (hover borders, focus rings, active tabs, live dots). No glow or box-shadow effects anywhere.
+- No pills. Buttons use a 4px radius; tech stacks and labels are mono text.
+- Categories are carried by their label, not a color.
+- The mobile menu is a full-screen takeover under a fixed header: three-bar icon morphs into an X, links stagger up, body and html scroll lock, Escape and route changes close it, hidden links leave the tab order, short viewports compact the type.
+- Every top-level section of a page is a stacked card: it pins when its bottom reaches the screen bottom and the next section slides over it with rounded corners. Keep sections as direct children of `<main>`, give nothing an `overflow: hidden` ancestor, and add `data-stack-skip` to opt one element out or `data-stack="off"` on `<main>` to opt a page out.
+- Internal navigation fades `<main>` out over 180ms with a 2px accent line, then the new page fades in. Header and footer stay put. Reduced motion skips it.
+- The native scrollbar is replaced by a slim auto-hiding thumb once JS mounts; drag and keyboard work on it.
+- Framer components never read `prefers-reduced-motion` during render (hydration mismatch); use `useReducedMotionSafe` from `lib/`, and `MotionConfig reducedMotion="user"` handles the rest.
 
-1. crops to 1120x630 to remove the baked-in Gemini sparkle watermark
-2. crossfades the tail over the head into a seamless 9s loop
-3. encodes H.264 and exports a poster frame
+## Video
 
-Requires `ffmpeg` on PATH. Re-run it after dropping in new source clips:
+Three kinds of clip, three components in `components/video/`:
+
+| Component | Used for | Loading |
+|---|---|---|
+| `HeroVideo` | home hero | eager; browser picks the mobile or desktop source at parse time; poster is preloaded in `app/layout.tsx` and is the LCP |
+| `AmbientVideo` | footer, tracks, project walkthroughs, 404 | source attached when within 600px of the viewport with `preload="auto"`, plays in view, pauses out of view; `eager` for case-study heroes; `mode="manual"` for hover cards |
+| `ScrubVideo` | the pinned process section | all-intra encode, `currentTime` driven by ScrollTrigger, loads one viewport ahead |
+
+Under `prefers-reduced-motion` no clip loads; posters render instead.
+
+### Sources and processing
+
+Source clips live in `Video Backgrounds/` (not served, see `.vercelignore`):
+
+- six Gemini loops in the root, graded into the dark palette (topo inverted, ink inverted and hue-shifted to cyan, silks hue-shifted)
+- project walkthrough recordings in `Video Backgrounds/projects/`
+
+`scripts/process-videos.ps1` builds everything in `public/video/` from the Gemini loops (crop out the baked-in watermark, grade, 9s crossfade loop, H.264, WebP poster). Requires `ffmpeg` on PATH:
 
 ```bash
 powershell -File scripts/process-videos.ps1
 ```
 
-`components/video/` (`HeroVideo`, `AmbientVideo`, `ScrubVideo`) renders them: nothing downloads until the clip
-nears the viewport, playback pauses off-screen, and under
-`prefers-reduced-motion` the poster frame renders instead of any video.
+Project walkthroughs are encoded by hand with the letterbox cropped off, at two sizes (1280 for heroes, 800 for cards), silent, `-g 60`, faststart. Example:
+
+```bash
+ffmpeg -i "Video Backgrounds/projects/clip.mp4" -an -vf "crop=1920:864:0:108,scale=1280:576,fps=30,format=yuv420p" -c:v libx264 -crf 27 -preset slow -g 60 -movflags +faststart public/video/project-<slug>.mp4
+```
+
+Then set `video`, `videoSmall`, and `videoPoster` on the project in `data/projects.ts`.
 
 ## Placeholders to swap before launch
 
 Search the codebase for `PLACEHOLDER`. Every one is commented with exactly what to drop in:
 
-1. **Project screenshots**: drop files in `public/projects/` and set `image:` on each project in `data/projects.ts`. Designed placeholder visuals render until then.
-2. **Headshot**: `app/about/page.tsx`, drop the photo at `public/about/headshot.jpg`.
-3. **New Orleans photos**: `app/about/page.tsx`, three tiles near Education & Training.
+1. **Deaf Shark Coffee copy**: `data/projects.ts`. The entry was created from the walkthrough clip alone; the one-liner, timeframe, stack, problem, built, outcome, and links are stubs.
+3. **New Orleans photos**: `app/about/page.tsx`, three tiles under Education.
 4. **Production domain**: `data/site.ts` (`url`), used by SEO/OG/sitemap.
 5. **GitHub repo links per project**: commented slots in `data/projects.ts`.
 6. **IUSE Google Charts exports**: chart block on `/research`.
 7. **Contact form email delivery**: add `RESEND_API_KEY` (see `.env.example`); the form works via mailto fallback until then.
+8. **Screenshots** for projects without `image` or `video` (Tedi's, Sonder, HowToob, WiCyS, the research studies): drop files in `public/projects/` and set `image:`.
 
-Done: resume PDF (`public/resume.pdf`), and the GitHub / LinkedIn / Instagram profile URLs in `data/site.ts`.
+Done: resume PDF, screenshots for Day's Ice Cream, AIO Training, and Adzio, walkthrough clips for AIO Training and Deaf Shark Coffee, and the GitHub / LinkedIn / Instagram profile URLs.
 
 ## Updating the resume
 
-Replace `public/resume.pdf` and everything follows automatically: the inline
-viewer on `/resume` and all three download buttons. The saved filename is
-`site.resumeDownloadName` in `data/site.ts`.
+Replace `public/resume.pdf` and every download link follows automatically. The saved filename is `site.resumeDownloadName` in `data/site.ts`.

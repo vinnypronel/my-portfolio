@@ -38,10 +38,6 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
   --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
-  /* Glow: interactive states only, never a resting style */
-  --shadow-glow: 0 0 0 1px rgb(0 229 255 / 0.45), 0 0 32px -6px rgb(0 229 255 / 0.45);
-  --shadow-glow-soft: 0 0 48px -12px rgb(0 229 255 / 0.35);
-
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -113,7 +109,7 @@
     @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
   }
 
-  /* Buttons: small radius, no pills, glow only on hover/focus */
+  /* Buttons: small radius, no pills, flat color changes only, no glow */
   .btn {
     @apply relative inline-flex items-center gap-2.5 rounded-[4px] px-6 py-3.5 font-mono text-[13px] font-medium tracking-[0.08em] uppercase transition-all duration-300;
   }
@@ -124,13 +120,6 @@
 
   .btn-ghost {
     @apply border border-line-strong text-fg hover:border-accent hover:text-accent;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .btn-primary:hover,
-    .btn-ghost:hover {
-      box-shadow: var(--shadow-glow-soft);
-    }
   }
 
   .eyebrow {
@@ -188,6 +177,36 @@
     @apply w-full border-0 border-b border-line-strong bg-transparent px-0 py-3 text-fg placeholder:text-fg-faint transition-colors duration-300 focus:border-accent focus:outline-none;
   }
 
+  /* Entrance animations that must not wait for hydration (above the fold). Pure CSS: they run as soon as the stylesheet paints. Set
+     --delay inline to stagger. Reduced motion collapses them via the global
+     rule at the bottom of this file. */
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--rise-y, 24px));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes line-up {
+    from {
+      transform: translateY(110%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  .rise {
+    animation: rise-in 0.9s var(--ease-out-expo) both;
+    animation-delay: var(--delay, 0s);
+  }
+  .line-up {
+    animation: line-up 1s var(--ease-out-expo) both;
+    animation-delay: var(--delay, 0s);
+  }
+
   /* Split-text reveal: lines are clipped and slide up */
   .line-mask {
     display: block;
@@ -224,4 +243,232 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Sideways overflow is clipped, never scrolled: overflow-x hidden on html or
+   body would turn it into the scroll container and break sticky stacking. */
+html,
+body {
+  overflow-x: clip;
+}
+
+/* Auto-hiding custom scrollbar (components/Scrollbar.tsx) */
+html.overlay-scrollbar {
+  scrollbar-width: none;
+}
+html.overlay-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.page-scrollbar {
+  position: fixed;
+  top: 0;
+  right: 3px;
+  z-index: 70;
+  width: 4px;
+  border-radius: 999px;
+  background: rgb(242 242 245 / 0.55);
+  opacity: 0;
+  pointer-events: none;
+  touch-action: none;
+  user-select: none;
+  transition: opacity 400ms ease;
+}
+.page-scrollbar[data-visible="true"],
+.page-scrollbar:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-scrollbar {
+    transition: none;
+  }
+}
+
+/* Route fade transition (components/RouteTransition.tsx): only <main> moves */
+/* Opacity only on <main>: a transform on it would become the containing
+   block for the fixed pinned sections ScrollTrigger creates inside it.
+   The route states use transitions, not animations, so they never fight
+   the first-paint .rise animation; that one fills backwards on main so it
+   releases the opacity property once it has played. */
+main.rise {
+  animation-fill-mode: backwards;
+}
+html[data-route="out"] main {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+html[data-route="in"] main {
+  opacity: 1;
+  transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.route-line {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.route-line-enter {
+  opacity: 1;
+  transform: scaleX(0.8);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.route-line-exit {
+  opacity: 0;
+  transform: scaleX(1);
+  transition:
+    transform 0.18s ease-out,
+    opacity 0.22s ease 0.18s;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-route] main {
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* Footer link hover: nudge right, brighten, underline grows left to right */
+.footer-link {
+  position: relative;
+  display: inline-block;
+  padding: 3px 0;
+  color: var(--color-fg-soft);
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+.footer-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.24s ease;
+}
+.footer-link:hover,
+.footer-link:focus-visible {
+  color: var(--color-fg);
+  transform: translateX(2px);
+}
+.footer-link:hover::after,
+.footer-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Full-screen takeover menu (components/Nav.tsx) */
+.nav-takeover {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  display: flex;
+  flex-direction: column;
+  padding: 96px 20px 32px;
+  background: var(--color-void);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.45s var(--ease-out-soft),
+    visibility 0.45s;
+  overflow-y: auto;
+}
+.nav-takeover.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+.nav-takeover-link {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    color 0.2s ease,
+    opacity 0.45s ease,
+    transform 0.45s var(--ease-out-soft);
+}
+.nav-takeover.open .nav-takeover-link {
+  opacity: 1;
+  transform: none;
+}
+.nav-takeover.open li:nth-child(1) .nav-takeover-link { transition-delay: 0.08s; }
+.nav-takeover.open li:nth-child(2) .nav-takeover-link { transition-delay: 0.13s; }
+.nav-takeover.open li:nth-child(3) .nav-takeover-link { transition-delay: 0.18s; }
+.nav-takeover.open li:nth-child(4) .nav-takeover-link { transition-delay: 0.23s; }
+.nav-takeover.open li:nth-child(5) .nav-takeover-link { transition-delay: 0.28s; }
+.nav-takeover-footer {
+  margin-top: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.4s;
+}
+.nav-takeover.open .nav-takeover-footer {
+  opacity: 1;
+}
+.nav-bar {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--color-fg);
+  transition:
+    transform 0.3s ease,
+    opacity 0.2s ease,
+    background-color 0.2s ease;
+  will-change: transform;
+}
+@media (max-height: 620px) {
+  .nav-takeover {
+    padding: 80px 20px 16px;
+  }
+  .nav-takeover-link .display-lg {
+    font-size: clamp(1.4rem, 6vh, 2rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-takeover,
+  .nav-takeover-link,
+  .nav-takeover-footer {
+    transition-duration: 0.001s !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* Stacked section scroll (components/StackSections.tsx). The direct children
+   of <main> pin as their bottom reaches the screen bottom; the next slides
+   over with rounded top corners and a shadow. Header heights must match
+   the real rendered header (h-16 below sm, h-20 from sm). */
+.stack-root {
+  --stack-header-h: 64px;
+  --stack-radius: clamp(24px, 5vw, 40px);
+  --stack-shadow: 0 -24px 70px rgb(0 0 0 / 0.55);
+}
+@media (min-width: 640px) {
+  .stack-root {
+    --stack-header-h: 80px;
+    --stack-radius: clamp(28px, 3vw, 48px);
+  }
+}
+@media (min-width: 1025px) {
+  .stack-root {
+    --stack-shadow: 0 -30px 90px rgb(0 0 0 / 0.5);
+  }
+}
+.stack-root > .stack-card {
+  background: var(--color-void);
+  scroll-margin-top: var(--stack-header-h);
+}
+.stack-root > .stack-card:not(.stack-card-last) {
+  position: sticky;
+  top: min(var(--stack-header-h), calc(100svh - var(--stack-card-h, 100svh)));
+}
+.stack-root > .stack-card:not(.stack-card-first) {
+  border-top-left-radius: var(--stack-radius);
+  border-top-right-radius: var(--stack-radius);
+  box-shadow: var(--stack-shadow);
+  overflow: clip;
+}
+.stack-root > .stack-card-last {
+  position: relative;
 }

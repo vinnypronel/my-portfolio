@@ -30,6 +30,16 @@ export interface Project {
    */
   image?: string;
   imageAlt?: string;
+  /**
+   * Optional silent walkthrough clip (see scripts/process-videos.ps1). When set,
+   * cards and the case-study hero loop it in view instead of the still.
+   * `videoSmall` is the 800px encode used by cards; `video` is the 1280px one.
+   */
+  video?: string;
+  videoSmall?: string;
+  videoPoster?: string;
+  /** CSS aspect-ratio of the clip, e.g. "1280 / 576"; hero frames adopt it so the whole frame shows */
+  videoAspect?: string;
   /** For research projects: anchor on /research with the full narrative */
   researchAnchor?: string;
 }
@@ -147,7 +157,8 @@ export const projects: Project[] = [
       { label: "Visit the live site", href: "https://daysicecream.com" },
       // PLACEHOLDER: add a GitHub repo link here if you make the code public.
     ],
-    imageAlt: "Screenshot of the Day's Ice Cream website homepage",
+    image: "/projects/days-ice-cream.jpg",
+    imageAlt: "Day's Ice Cream homepage: the hero with the shop logo over a counter of cones",
   },
   {
     slug: "adzio",
@@ -179,33 +190,30 @@ export const projects: Project[] = [
       "VSL production pipeline established for client outreach",
     ],
     links: [{ label: "Visit the live site", href: "https://adzio.io" }],
-    image: "/projects/adzio.png",
-    imageAlt: "Screenshot of the Adzio agency website",
+    image: "/projects/adzio.jpg",
+    imageAlt: "Adzio homepage: Get Seen and Booked Every Month headline beside the showreel",
   },
   {
     slug: "tedis-hair-studio",
     title: "Tedi's Hair Studio",
     oneLiner:
-      "A full rebuild for a Matawan, NJ salon: a forest green brand system and custom booking to replace Booksy.",
+      "A digital storefront for a private, appointment-only barber studio in Matawan, NJ: services, gallery, reviews, merch, and booking in one place.",
     category: "freelance",
-    status: "in-progress",
     client: "Tedi's Hair Studio, Matawan NJ",
     role: "Freelance designer & developer (solo)",
-    stack: ["Next.js", "Brand system design", "Custom booking system"],
+    stack: ["Next.js", "TypeScript", "Cloudflare Workers", "Booksy integration"],
     problem:
-      "The salon was renting its booking flow from Booksy, paying for a generic experience that didn't match the brand and didn't belong to them.",
+      "The studio had a Booksy page and an Instagram, and nothing that was its own. It needed a home that presents the brand, the work, and the reviews, and sends people straight to book.",
     built: [
-      "A full site rebuild specification, completed and client-approved scope",
-      "A forest green brand system designed for the studio",
-      "A custom booking flow to replace the Booksy dependency",
-      "The Next.js build, in progress now",
+      "A brand system and site designed from scratch for the studio",
+      "Services with pricing and durations, each with a direct Booksy booking action",
+      "A gallery of cuts, a live Instagram feed, and 176 five-star reviews surfaced on the site",
+      "A shirt archive for the studio's merch",
+      "Hours, location inside Bellazio Collective, and contact details",
+      "Deployed on Cloudflare Workers via OpenNext",
     ],
-    outcome: [
-      "In progress: spec and brand system are locked, the build is underway",
-    ],
-    links: [
-      // PLACEHOLDER: add mockup/spec links or the live site once the build ships.
-    ],
+    outcome: ["Live in production at tedishairstudio.com"],
+    links: [{ label: "Visit the live site", href: "https://tedishairstudio.com" }],
     imageAlt: "Tedi's Hair Studio rebuild mockups",
   },
   {
@@ -233,7 +241,44 @@ export const projects: Project[] = [
       "The business runs its own bookings and payments end to end, with no developer in the loop",
     ],
     links: [{ label: "Visit the live site", href: "https://trainingaio.com" }],
-    imageAlt: "Screenshot of the AIO Training booking platform",
+    image: "/projects/aio-training.jpg",
+    imageAlt: "AIO Training homepage: Build Your Athlete's Next Level over a batting cage",
+    video: "/video/project-aio.mp4",
+    videoSmall: "/video/project-aio-sm.mp4",
+    videoPoster: "/video/project-aio.webp",
+    videoAspect: "1280 / 572",
+  },
+
+  {
+    slug: "deaf-shark-coffee",
+    title: "Deaf Shark Coffee",
+    // PLACEHOLDER: every copy field below is a stub written from the walkthrough
+    // clip alone. Replace the one-liner, timeframe, role, stack, problem, built,
+    // outcome, and links with the real project details.
+    oneLiner:
+      "PLACEHOLDER: an ordering-ready site for a coffee roaster, with a menu carousel and online ordering. Replace with the real one-liner.",
+    category: "freelance",
+    featured: true,
+    status: "in-progress",
+    timeframe: "PLACEHOLDER timeframe",
+    client: "Deaf Shark Coffee, Union NJ",
+    role: "Freelance designer & developer (solo)",
+    stack: ["Next.js", "Tailwind CSS"],
+    problem:
+      "PLACEHOLDER: describe what the business needed from the site and what it had before.",
+    built: [
+      "PLACEHOLDER: hero, menu carousel with add-to-order, story, events, visit, and apply pages (seen in the walkthrough)",
+      "PLACEHOLDER: online ordering flow",
+    ],
+    outcome: ["PLACEHOLDER: outcome once the site is live"],
+    links: [
+      // PLACEHOLDER: add the live URL once the site is announced.
+    ],
+    imageAlt: "Deaf Shark Coffee homepage: Coffee from El Salvador, Roasted in Union, beside the beverages carousel",
+    video: "/video/project-deafshark.mp4",
+    videoSmall: "/video/project-deafshark-sm.mp4",
+    videoPoster: "/video/project-deafshark.webp",
+    videoAspect: "1280 / 576",
   },
 
   // ── Hackathons & Leadership ─────────────────────────────────
@@ -297,28 +342,26 @@ export const projects: Project[] = [
     slug: "wicys-kean-website",
     title: "WiCyS Kean Chapter Website",
     oneLiner:
-      "The official Kean University WiCyS chapter site: an events and announcements system plus a resource hub, built and maintained in-house.",
+      "The official Kean University WiCyS chapter site: events, a semester photo gallery, a resource hub, and a content editor the e-board runs without code.",
     category: "leadership",
-    status: "in-progress",
     timeframe: "Jan 2026 to present",
     role: "Lead Web Developer, WiCyS Kean e-board",
-    stack: ["Next.js", "REST API integrations"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Keystatic", "Neon Postgres", "Vercel"],
     problem:
       "The Kean Women in CyberSecurity chapter needs an official web home for events, membership, and visibility on campus.",
     built: [
-      "The chapter's official full-stack website, built and maintained end to end",
-      "An events and announcements system the e-board updates as the semester runs",
-      "A resource hub collecting chapter materials in one place",
-      "REST API integrations feeding the events, announcements, and resource content",
-      "Deployment on production-level infrastructure",
+      "Event listings that move from upcoming to past automatically, with add-to-calendar buttons and recaps",
+      "A photo gallery organized by semester and category, with a full-screen viewer",
+      "E-board roster, alumni page, Capture the Flag page, and beginner-friendly resources",
+      "Contact and e-board interest forms stored in Postgres, visible only to signed-in admins",
+      "A Keystatic content editor so board members update the site without code",
+      "Uploaded images resized and served as AVIF or WebP; skip link, keyboard navigation, reduced-motion support",
     ],
     outcome: [
-      "In progress: the events and announcements system and the resource hub are the current shipping focus",
-      "Maintained continuously since January 2026 as the chapter's official site",
+      "Live at wicyskean.me as the chapter's official site",
+      "Maintained continuously since January 2026",
     ],
-    links: [
-      // No public URL yet; add the live link once the chapter site is announced.
-    ],
+    links: [{ label: "Visit the live site", href: "https://wicyskean.me" }],
   },
 ];
 
@@ -338,7 +381,7 @@ export function getAdjacentProjects(slug: string): {
 }
 
 /** Home page order: client work leads, the strongest research study closes. */
-const featuredOrder = ["days-ice-cream", "aio-training", "adzio", "debate-coach"];
+const featuredOrder = ["deaf-shark-coffee", "aio-training", "days-ice-cream", "debate-coach"];
 export const featuredProjects = featuredOrder
   .map((slug) => projects.find((p) => p.slug === slug))
   .filter((p): p is Project => Boolean(p));

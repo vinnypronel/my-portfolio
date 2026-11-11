@@ -7,7 +7,7 @@ import { Reveal } from "./Reveal";
 const footerLinks = [
   { label: "Work", href: "/projects" },
   { label: "Research", href: "/research" },
-  { label: "Studio", href: "/about" },
+  { label: "About", href: "/about" },
   { label: "Resume", href: "/resume" },
   { label: "Contact", href: "/contact" },
 ];
@@ -38,7 +38,7 @@ export function Footer() {
             <Link href="/contact" className="btn btn-primary">
               Start a project
             </Link>
-            <a href={`mailto:${site.email}`} className="link-sweep font-mono text-sm text-fg-soft hover:text-fg">
+            <a href={`mailto:${site.email}`} className="footer-link font-mono text-sm">
               {site.email}
             </a>
           </div>
@@ -61,7 +61,7 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="link-sweep w-fit text-sm text-fg-soft transition-colors hover:text-fg"
+                className="footer-link w-fit text-sm"
               >
                 {link.label}
               </Link>
@@ -74,7 +74,7 @@ export function Footer() {
             <a
               href={site.resumePath}
               download={site.resumeDownloadName}
-              className="link-sweep mt-1 w-fit text-sm text-fg-soft transition-colors hover:text-fg"
+              className="footer-link mt-1 w-fit text-sm"
             >
               Download resume
             </a>

@@ -5,6 +5,10 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
+import { Scrollbar } from "@/components/Scrollbar";
+import { RouteTransition } from "@/components/RouteTransition";
+import { StackSections } from "@/components/StackSections";
+import { MotionProvider } from "@/components/MotionProvider";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -29,24 +33,6 @@ export const metadata: Metadata = {
   },
 };
 
-/** Structured data so search results can show the studio and its owner. */
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: site.brand,
-  url: site.url,
-  description: site.positioning,
-  email: site.email,
-  areaServed: site.location,
-  founder: {
-    "@type": "Person",
-    name: site.fullName,
-    jobTitle: "Web developer and researcher",
-    sameAs: Object.values(site.socials),
-  },
-  sameAs: Object.values(site.socials),
-};
-
 export const viewport: Viewport = {
   themeColor: "#050507",
   colorScheme: "dark",
@@ -62,23 +48,32 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/video/hero-topo.webp" />
       </head>
       <body>
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:bg-accent focus:px-5 focus:py-3 focus:font-mono focus:text-xs focus:font-medium focus:uppercase focus:tracking-widest focus:text-void"
-        >
-          Skip to content
-        </a>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-        />
-        <SmoothScroll />
-        <Cursor />
-        <Nav />
-        <main id="main" className="relative z-[1]">
-          {children}
-        </main>
-        <Footer />
+        <MotionProvider>
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:bg-accent focus:px-5 focus:py-3 focus:font-mono focus:text-xs focus:font-medium focus:uppercase focus:tracking-widest focus:text-void"
+          >
+            Skip to content
+          </a>
+          <SmoothScroll />
+          <Cursor />
+          <Nav />
+          {/* `rise` is the first-paint entrance (CSS only); RouteTransition
+            animates <main> on client-side navigations after that. The page's
+            top-level sections are direct children, so StackSections can
+            turn them into cards. */}
+          <main
+            id="main"
+            className="rise relative z-[1]"
+            style={{ "--rise-y": "0px" } as React.CSSProperties}
+          >
+            {children}
+          </main>
+          <Footer />
+          <Scrollbar />
+          <RouteTransition />
+          <StackSections />
+        </MotionProvider>
       </body>
     </html>
   );

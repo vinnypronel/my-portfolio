@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Reveal, RevealLines } from "@/components/Reveal";
 import { SkillsGrid } from "@/components/SkillsGrid";
 import { SectionHeading } from "@/components/SectionHeading";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Studio",
+  title: "About Vincent",
   description:
-    "pronelweb is the studio of Vincent Pronel: a developer and researcher in New Jersey who designs, builds, and maintains every project himself.",
+    "About Vincent Pronel, an independent web developer and researcher in New Jersey.",
   openGraph: {
-    title: "Studio · pronelweb",
+    title: "About Vincent · pronelweb",
     description:
-      "The studio of Vincent Pronel: a developer and researcher in New Jersey who designs, builds, and maintains every project himself.",
+      "Vincent Pronel is an independent web developer and researcher in New Jersey.",
   },
 };
 
@@ -65,7 +66,7 @@ export default function AboutPage() {
       <div className="grid gap-14 lg:grid-cols-12">
         <header className="lg:col-span-7">
           <Reveal immediate>
-            <p className="eyebrow">The studio</p>
+            <p className="eyebrow">About me</p>
           </Reveal>
           <RevealLines
             immediate
@@ -103,21 +104,15 @@ export default function AboutPage() {
         {/* Photo */}
         <div className="lg:col-span-5">
           <Reveal immediate delay={0.3}>
-            {/* PLACEHOLDER: replace this block with the real photo.
-                Drop it at /public/about/headshot.jpg and swap in:
-                <Image src="/about/headshot.jpg" alt="Vincent Pronel" fill className="object-cover" /> */}
-            <div
-              role="img"
-              aria-label={`Photo of ${site.fullName}, coming soon`}
-              className="relative flex aspect-[4/5] items-end overflow-hidden rounded-[6px] border border-line bg-ink-800 p-6"
-            >
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgb(0_229_255_/_0.12),transparent_60%)]"
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[6px] border border-line bg-ink-800">
+              <Image
+                src="/about/headshot.jpg"
+                alt={`${site.fullName}, founder of ${site.brand}`}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover object-top"
               />
-              <p className="relative font-mono text-[11px] tracking-[0.18em] text-fg-faint uppercase">
-                Portrait / pending
-              </p>
             </div>
           </Reveal>
         </div>
@@ -125,7 +120,7 @@ export default function AboutPage() {
 
       {/* Roles */}
       <section aria-labelledby="roles-title" className="mt-32">
-        <SectionHeading id="roles-title" eyebrow="Roles" lines={["Five hats,", "worn this year."]} />
+        <SectionHeading eyebrow="Roles" lines={["Five hats,", "worn this year."]} />
         <ul className="mt-12 flex flex-col divide-y divide-line border-y border-line">
           {roles.map((role, i) => (
             <li key={role.title}>
@@ -154,7 +149,7 @@ export default function AboutPage() {
 
       {/* Skills */}
       <section aria-labelledby="skills-title" className="mt-32">
-        <SectionHeading id="skills-title" eyebrow="Toolbox" lines={["The stack,", "organized."]} />
+        <SectionHeading eyebrow="Toolbox" lines={["The stack,", "in practice."]} />
         <Reveal delay={0.1}>
           <div className="mt-12">
             <SkillsGrid />
@@ -164,7 +159,7 @@ export default function AboutPage() {
 
       {/* Education */}
       <section aria-labelledby="education-title" className="mt-32">
-        <SectionHeading id="education-title" eyebrow="Education and training" lines={["Programs that", "shaped the work."]} />
+        <SectionHeading eyebrow="Education and training" lines={["Programs that", "shaped the work."]} />
         <div className="mt-12 grid gap-12 lg:grid-cols-12">
           <ul className="flex flex-col divide-y divide-line border-y border-line lg:col-span-7">
             {education.map((item, i) => (

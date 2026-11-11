@@ -1,47 +1,43 @@
 import type { Metadata } from "next";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { site } from "@/data/site";
+import { ResumeSwitcher } from "@/components/ResumeSwitcher";
 
 export const metadata: Metadata = {
   title: "Resume",
-  description: "Resume for Vincent Pronel, developer and researcher. Download the PDF.",
+  description:
+    "Resume for Vincent Pronel in three versions: software engineering, AI and ML, and data. Download the PDF.",
   openGraph: {
     title: "Resume · pronelweb",
-    description: "Resume for Vincent Pronel, developer and researcher. Download the PDF.",
+    description:
+      "Resume for Vincent Pronel in three versions: software engineering, AI and ML, and data. Download the PDF.",
   },
 };
 
+/* Shared across all three versions; taken from the current resumes. */
 const sections: { title: string; items: string[] }[] = [
   {
-    title: "Roles",
+    title: "Experience",
     items: [
-      "Founder, pronelweb",
-      "Researcher, IUSE Scholars Academy",
-      "Lead Web Developer, Kean WiCyS (e-board)",
-      "Peer mentor and tutor, Code Samurai",
-      "Co-founder, Adzio",
-      "Data Visualization and Analytics Intern, GSSRP (Jul 6 to 30, 2026)",
+      "Independent Web Developer, pronelweb · Jan 2026 to present. Five production sites for five paying clients plus the WiCyS Kean chapter site; two with live payments.",
+      "Computer Science Tutor, Code Samurai · Jan 2026 to present. Selected by CS faculty for one-on-one Database Management Systems tutoring.",
+      "Data Visualization and Analytics Intern, GSSRP · July 2026. Lectured daily and wrote 8 labs for 5 high school students under Dr. Ching-yu Huang.",
     ],
   },
   {
-    title: "Research and presentations",
+    title: "Research",
     items: [
-      "GMiS Research Posters Competition · Jobs vs. Wages",
-      "UR2PhD conference showcase, New Orleans · Debate Coach",
+      "AI-Assisted Java Execution Visualizer · CRA UR2PhD-REU Fellowship, June 2026 to present. Competitively selected, $8,000 funded, 400 hours. Advisor Dr. Yan Ma.",
+      "Jobs vs. Wages · NSF IUSE Scholars Academy, May 2026 to present. Competitively selected, $1,400 funded. Advisor Dr. Pauline Wang. Presented at GMiS 2026, Albuquerque.",
+      "AI Debate Coach Evaluation · CRA UR2PhD, Feb to Apr 2026. Advisor Dr. Yan Ma. Presented at the UR2PhD Research Showcase, New Orleans.",
     ],
   },
   {
-    title: "Education and training",
+    title: "Education",
     items: [
-      "B.S. Computer Science, Kean University · Expected May 2027",
+      "B.S. Computer Science, Kean University · Expected 2027",
       "Dean's List · Spring 2024, Fall 2025",
-      "CRA UR2PhD research training program",
-      "CodePath TIP103 · Advanced Technical Interview Prep",
+      "Web Developer, WiCyS Kean Chapter E-Board",
     ],
-  },
-  {
-    title: "Core stack",
-    items: ["TypeScript / React / Next.js / Tailwind CSS / GSAP / Node.js / MySQL / PHP / Python / SQL"],
   },
 ];
 
@@ -58,18 +54,17 @@ export default function ResumePage() {
             delay={0.1}
             as="h1"
             className="display-xl mt-6 font-semibold text-fg"
-            lines={["The", "one-pager."]}
+            lines={["One page,", "three cuts."]}
           />
           <Reveal immediate delay={0.4}>
-            <p className="prose-measure mt-8">{site.positioning}</p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              {/* To update: replace public/resume.pdf and every link follows. */}
-              <a href={site.resumePath} download={site.resumeDownloadName} className="btn btn-primary">
-                Download PDF
-              </a>
-              <a href={site.resumePath} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-                Open in new tab
-              </a>
+            <p className="prose-measure mt-8">
+              The same year of work, framed for the role you are hiring for.
+              Pick the version that matches and download it.
+            </p>
+          </Reveal>
+          <Reveal immediate delay={0.5}>
+            <div className="mt-12">
+              <ResumeSwitcher />
             </div>
           </Reveal>
         </header>
@@ -79,9 +74,9 @@ export default function ResumePage() {
             <dl className="flex flex-col divide-y divide-line border-y border-line">
               {sections.map((s) => (
                 <div key={s.title} className="grid gap-3 py-7 sm:grid-cols-12 sm:gap-8">
-                  <dt className="eyebrow sm:col-span-4">{s.title}</dt>
-                  <dd className="sm:col-span-8">
-                    <ul className="flex flex-col gap-2 text-[15px] leading-relaxed text-fg">
+                  <dt className="eyebrow sm:col-span-3">{s.title}</dt>
+                  <dd className="sm:col-span-9">
+                    <ul className="flex flex-col gap-3 text-[15px] leading-relaxed text-fg">
                       {s.items.map((item) => (
                         <li key={item}>{item}</li>
                       ))}

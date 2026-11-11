@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 import { projects } from "@/data/projects";
 import { categoryMeta, categoryOrder, type Category } from "@/data/categories";
 import { ProjectCard } from "./ProjectCard";
@@ -11,7 +12,7 @@ export type Filter = Category | "all";
 /** Filterable, animated project grid. Featured items always sort first. */
 export function ProjectsExplorer({ initialFilter = "all" }: { initialFilter?: Filter }) {
   const [filter, setFilter] = useState<Filter>(initialFilter);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   const counts = useMemo(() => {
     const base: Record<Filter, number> = { all: projects.length, research: 0, freelance: 0, leadership: 0 };

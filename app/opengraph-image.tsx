@@ -52,7 +52,7 @@ export default function OpenGraphImage() {
             color: "rgba(242,242,245,0.45)",
           }}
         >
-          <div>DIGITAL STUDIO · NEW JERSEY</div>
+          <div>INDEPENDENT WEB DEVELOPER · NEW JERSEY</div>
           <div>{site.url.replace("https://", "")}</div>
         </div>
       </div>
