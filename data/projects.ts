@@ -42,7 +42,6 @@ export const projects: Project[] = [
     oneLiner:
       "Does having a job guarantee a living wage? A 52-state economic analysis built on MySQL, PHP, and Google Charts.",
     category: "research",
-    featured: true,
     timeframe: "IUSE Scholars Academy · 2025–26 academic year",
     role: "Solo researcher, advised by Prof. Pauline Wang",
     stack: ["MySQL", "SQL", "PHP", "Google Charts"],
@@ -156,6 +155,7 @@ export const projects: Project[] = [
     oneLiner:
       "A co-founded web agency with a live site built to sell, featuring custom GSAP animation and button systems throughout.",
     category: "freelance",
+    featured: true,
     timeframe: "Feb 2026 to Aug 2026",
     client: "Own agency",
     role: "Co-founder & developer",
@@ -213,6 +213,7 @@ export const projects: Project[] = [
     oneLiner:
       "A full-stack fitness booking platform that replaced manual scheduling, shipped in two weeks and live in production.",
     category: "freelance",
+    featured: true,
     timeframe: "June 2026 to July 2026",
     client: "AIO Training (fitness training business)",
     role: "Freelance developer (solo)",
@@ -335,4 +336,8 @@ export function getAdjacentProjects(slug: string): {
   };
 }
 
-export const featuredProjects = projects.filter((p) => p.featured);
+/** Home page order: client work leads, the strongest research study closes. */
+const featuredOrder = ["days-ice-cream", "aio-training", "adzio", "debate-coach"];
+export const featuredProjects = featuredOrder
+  .map((slug) => projects.find((p) => p.slug === slug))
+  .filter((p): p is Project => Boolean(p));

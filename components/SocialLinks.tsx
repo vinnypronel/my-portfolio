@@ -2,11 +2,10 @@ import type { ReactNode } from "react";
 import { site } from "@/data/site";
 
 /**
- * Social icon row for the footer.
+ * Social icon row for the footer and the menu overlay.
  *
  * Entries whose URL is still a placeholder (contains "YOUR-") are skipped, so
- * the live site never ships a dead link. Fill the real URL into
- * data/site.ts and the icon appears automatically.
+ * the live site never ships a dead link.
  */
 
 type SocialKey = keyof typeof site.socials;
@@ -41,7 +40,7 @@ export function SocialLinks() {
   if (links.length === 0) return null;
 
   return (
-    <ul className="flex flex-wrap gap-2.5">
+    <ul className="flex flex-wrap gap-2">
       {links.map((link) => (
         <li key={link.key}>
           <a
@@ -49,15 +48,9 @@ export function SocialLinks() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${link.label} (opens in a new tab)`}
-            className="group flex size-11 items-center justify-center rounded-full border border-cream/25 text-cream/70 transition-all duration-300 hover:border-cream hover:bg-cream hover:text-ink focus-visible:border-cream motion-safe:hover:-translate-y-0.5"
+            className="flex size-11 items-center justify-center rounded-[4px] border border-line text-fg-soft transition-all duration-300 hover:border-accent hover:text-accent motion-safe:hover:shadow-glow-soft"
           >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden
-              focusable="false"
-              fill="currentColor"
-              className="size-[18px]"
-            >
+            <svg viewBox="0 0 24 24" aria-hidden focusable="false" fill="currentColor" className="size-[18px]">
               {ICONS[link.key]}
             </svg>
           </a>

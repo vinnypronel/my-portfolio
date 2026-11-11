@@ -1,80 +1,79 @@
 @import "tailwindcss";
 
-/* ─────────────────────────────────────────────────────────────
+/*
    Design tokens: the whole visual system lives here.
-   Base: warm paper + ink (clean/premium editorial layer)
-   Signature accent: ultramarine (CTAs, stats, active states)
-   Category accents: research teal · freelance coral · leadership magenta
-   ───────────────────────────────────────────────────────────── */
+   Base: near-black surfaces, cool grey text (dark studio layer)
+   Signature accent: electric cyan #00E5FF, used on interactive states only
+   Type: Geist Sans (display + body), Geist Mono (labels, eyebrows, stacks)
+*/
 @theme {
-  /* Base */
-  --color-paper: #fbf8f2;
-  --color-paper-deep: #f3ede0;
-  --color-ink: #1b150d;
-  --color-ink-soft: #57503f;
-  --color-ink-faint: #756c59; /* 4.9:1 on paper, AA for the small captions that use it */
-  --color-line: #e6ddc9;
-  --color-cream: #fdfbf7;
+  /* Surfaces, darkest first */
+  --color-void: #050507;
+  --color-ink-900: #0a0a0c;
+  --color-ink-800: #111115;
+  --color-ink-700: #1a1a20;
+  --color-ink-600: #25252d;
 
-  /* Signature accent: ultramarine */
-  --color-accent: #2c24c8;
-  --color-accent-deep: #1e1789;
+  /* Text */
+  --color-fg: #f2f2f5;
+  --color-fg-soft: #a1a1aa;
+  --color-fg-faint: #6b6b75;
 
-  /* Category accents (AA-safe as text on paper) */
-  --color-research: #0b7a7e;
-  --color-freelance: #bc4413;
-  --color-leadership: #a82577;
+  /* Lines */
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
 
-  /* Bright variants for use on dark (ink) surfaces */
-  --color-research-bright: #4fd8dd;
-  --color-freelance-bright: #ff9a6b;
-  --color-leadership-bright: #f487cd;
-  --color-accent-bright: #a5a0ff;
+  /* Signature accent */
+  --color-accent: #00e5ff;
+  --color-accent-dim: #00b8cc;
+  --color-accent-deep: #007a88;
 
-  /* Typography, wired to next/font variables in app/layout.tsx */
-  --font-display: var(--font-fraunces), "Georgia", serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  /* Back-compat aliases used by a few shared components */
+  --color-cream: #f2f2f5;
+  --color-ink: #050507;
 
-  /* Elevation */
-  --shadow-lift: 0 24px 48px -16px rgb(27 21 13 / 0.18),
-    0 4px 12px -4px rgb(27 21 13 / 0.08);
-  --shadow-card: 0 1px 2px rgb(27 21 13 / 0.05);
+  /* Typography, wired to the geist package in app/layout.tsx */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Glow: interactive states only, never a resting style */
+  --shadow-glow: 0 0 0 1px rgb(0 229 255 / 0.45), 0 0 32px -6px rgb(0 229 255 / 0.45);
+  --shadow-glow-soft: 0 0 48px -12px rgb(0 229 255 / 0.35);
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Base layer ─────────────────────────────────────────────── */
+/* Base layer */
 @layer base {
   html {
     @apply scroll-pt-24;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
+    background: var(--color-void);
+    color-scheme: dark;
   }
 
   body {
-    @apply bg-paper font-sans text-ink antialiased;
+    @apply bg-void font-sans text-fg antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
   }
 
-  /* Faint paper grain: atmosphere without clutter */
+  /* Film grain: sits under content, never over it */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
-    z-index: 50;
+    z-index: 0;
     pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   ::selection {
     background: var(--color-accent);
-    color: var(--color-cream);
+    color: var(--color-void);
   }
 
   :focus-visible {
@@ -88,57 +87,134 @@
   h3 {
     @apply font-display;
     text-wrap: balance;
+    letter-spacing: -0.03em;
+  }
+
+  /* Lenis smooth scroll */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
   }
 }
 
-/* ── Reusable component classes ─────────────────────────────── */
+/* Reusable component classes */
 @layer components {
   .container-site {
-    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
   }
 
+  /* Buttons: small radius, no pills, glow only on hover/focus */
   .btn {
-    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-300;
+    @apply relative inline-flex items-center gap-2.5 rounded-[4px] px-6 py-3.5 font-mono text-[13px] font-medium tracking-[0.08em] uppercase transition-all duration-300;
   }
 
-  /* Use as `class="btn btn-primary"` / `class="btn btn-outline"` */
   .btn-primary {
-    @apply bg-accent text-cream hover:bg-accent-deep;
+    @apply bg-accent text-void hover:bg-fg;
   }
 
-  .btn-outline {
-    @apply border border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-cream;
-  }
-
-  .btn-on-dark {
-    @apply bg-cream text-ink hover:bg-paper-deep;
+  .btn-ghost {
+    @apply border border-line-strong text-fg hover:border-accent hover:text-accent;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px -8px rgb(44 36 200 / 0.45);
-    }
-    .btn-outline:hover,
-    .btn-on-dark:hover {
-      transform: translateY(-2px);
+    .btn-primary:hover,
+    .btn-ghost:hover {
+      box-shadow: var(--shadow-glow-soft);
     }
   }
 
   .eyebrow {
-    @apply text-xs font-semibold tracking-[0.22em] uppercase text-ink-soft;
+    @apply font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-fg-faint;
   }
 
   .prose-measure {
-    @apply max-w-[62ch] text-[1.0625rem] leading-[1.75] text-ink-soft;
+    @apply max-w-[58ch] text-[1.0625rem] leading-[1.7] text-fg-soft;
   }
 
   .hairline {
     @apply border-line;
   }
+
+  /* Oversized display sizes */
+  .display-xl {
+    font-size: clamp(2.75rem, 7.2vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .display-lg {
+    font-size: clamp(2.25rem, 5vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .display-md {
+    font-size: clamp(1.75rem, 3.2vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  /* Link underline that sweeps in from the left */
+  .link-sweep {
+    @apply relative;
+  }
+  .link-sweep::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+  .link-sweep:hover::after,
+  .group:hover .link-sweep::after {
+    transform: scaleX(1);
+  }
+
+  /* Text fields: underline style */
+  .field {
+    @apply w-full border-0 border-b border-line-strong bg-transparent px-0 py-3 text-fg placeholder:text-fg-faint transition-colors duration-300 focus:border-accent focus:outline-none;
+  }
+
+  /* Split-text reveal: lines are clipped and slide up */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  /* Marquee */
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
-/* ── Motion safety ──────────────────────────────────────────── */
+/* Motion safety */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

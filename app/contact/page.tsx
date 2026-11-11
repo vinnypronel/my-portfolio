@@ -1,82 +1,77 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
-import { Reveal } from "@/components/Reveal";
+import { Reveal, RevealLines } from "@/components/Reveal";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch: internships, research collaborations, or freelance web work for your business.",
+    "Start a project with pronelweb: websites and booking platforms for businesses, research collaborations, or internships.",
   openGraph: {
-    title: "Contact · Vinny",
+    title: "Contact · pronelweb",
     description:
-      "Get in touch: internships, research collaborations, or freelance web work for your business.",
+      "Start a project with pronelweb: websites and booking platforms for businesses, research collaborations, or internships.",
   },
 };
 
 export default function ContactPage() {
   return (
-    <div className="container-site pt-16 pb-8 sm:pt-24">
-      <div className="grid gap-14 lg:grid-cols-12">
+    <div className="container-site pt-36 pb-8 sm:pt-44">
+      <div className="grid gap-16 lg:grid-cols-12">
         <header className="lg:col-span-5">
-          <Reveal>
+          <Reveal immediate>
             <p className="eyebrow">Contact</p>
-            <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight sm:text-6xl">
-              Let&rsquo;s <em className="text-accent">talk.</em>
-            </h1>
-            <p className="prose-measure mt-6">
-              Recruiting, research, or just saying hi after a conference. My
-              inbox is open.
+          </Reveal>
+          <RevealLines
+            immediate
+            delay={0.1}
+            as="h1"
+            className="display-xl mt-6 font-semibold text-fg"
+            lines={["Let's build", "something that", "pays for itself."]}
+          />
+          <Reveal immediate delay={0.45}>
+            <p className="prose-measure mt-8">
+              Run a business and need a site that brings in customers, or a
+              booking flow you own instead of rent? Start here. Research
+              collaborations and internships are welcome too.
             </p>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            {/* Freelance micro-copy: a real revenue stream, invited explicitly */}
-            <div className="mt-8 rounded-2xl border border-freelance/25 bg-freelance/8 p-6">
-              <p className="text-sm font-semibold text-freelance">
-                Run a local business?
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                I build websites that owners manage themselves, for real
-                businesses like ice cream shops, salons, and training gyms. If your business
-                needs a site that actually brings in customers, reach out. It
-                starts with a message exactly like this one.
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.15}>
-            <div className="mt-8 flex flex-col gap-3">
-              <a
-                href={`mailto:${site.email}`}
-                className="text-sm font-semibold text-accent hover:text-accent-deep"
-              >
-                {site.email} ↗
-              </a>
-              {/* PLACEHOLDER: real profile URLs live in data/site.ts */}
-              <a
-                href={site.socials.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-accent hover:text-accent-deep"
-              >
-                LinkedIn ↗
-              </a>
-              <a
-                href={site.socials.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-accent hover:text-accent-deep"
-              >
-                GitHub ↗
-              </a>
-            </div>
+          <Reveal immediate delay={0.55}>
+            <dl className="mt-12 flex flex-col gap-6 border-t border-line pt-6">
+              <div>
+                <dt className="eyebrow">Email</dt>
+                <dd className="mt-2">
+                  <a href={`mailto:${site.email}`} className="link-sweep text-fg hover:text-accent">
+                    {site.email}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="eyebrow">Elsewhere</dt>
+                <dd className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+                  <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer" className="link-sweep text-fg hover:text-accent">
+                    LinkedIn &#8599;
+                  </a>
+                  <a href={site.socials.github} target="_blank" rel="noopener noreferrer" className="link-sweep text-fg hover:text-accent">
+                    GitHub &#8599;
+                  </a>
+                  <a href={site.socials.instagram} target="_blank" rel="noopener noreferrer" className="link-sweep text-fg hover:text-accent">
+                    Instagram &#8599;
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="eyebrow">Based in</dt>
+                <dd className="mt-2 text-fg">{site.location}</dd>
+              </div>
+            </dl>
           </Reveal>
         </header>
 
-        <div className="lg:col-span-7">
-          <Reveal delay={0.15}>
-            <div className="rounded-2xl border hairline bg-cream p-7 shadow-card sm:p-10">
+        <div className="lg:col-span-6 lg:col-start-7">
+          <Reveal immediate delay={0.4}>
+            <div className="rounded-[6px] border border-line bg-ink-900 p-7 sm:p-10">
               <ContactForm />
             </div>
           </Reveal>

@@ -1,154 +1,135 @@
 import Link from "next/link";
-import { Reveal } from "@/components/Reveal";
-import { HeroViz } from "@/components/HeroViz";
+import { Hero } from "@/components/home/Hero";
+import { Tracks } from "@/components/home/Tracks";
+import { CaseStudyRow } from "@/components/CaseStudyRow";
 import { SectionHeading } from "@/components/SectionHeading";
-import { ProjectCard } from "@/components/ProjectCard";
-import { StatusBadge } from "@/components/StatusBadge";
-import { BackgroundVideo } from "@/components/BackgroundVideo";
-import { CategoryPreviewCards } from "@/components/CategoryPreviewCards";
+import { StatBlock } from "@/components/StatBlock";
+import { Reveal } from "@/components/Reveal";
+import { ScrubVideo } from "@/components/video/ScrubVideo";
 import { featuredProjects } from "@/data/projects";
 import { site } from "@/data/site";
+
+const processSteps = [
+  {
+    index: "01",
+    title: "Discover",
+    body: "Every project starts with the business, not the brief. What has to be true for this site to pay for itself? That answer shapes everything after it.",
+  },
+  {
+    index: "02",
+    title: "Design",
+    body: "A brand system and layout built for the content you actually have, tested at every screen size from a phone to a 1920 monitor before a line of code is written.",
+  },
+  {
+    index: "03",
+    title: "Ship",
+    body: "Production Next.js on Vercel, a custom domain, and an edit mode so you update your own site and never wait on a developer again.",
+  },
+];
+
+/* Every figure below is pulled from an outcome already recorded in data/. */
+const proof = [
+  { value: "600+", label: "Monthly visitors", detail: "Day's Ice Cream, live in production" },
+  { value: "2 wks", label: "Brief to live", detail: "AIO Training booking platform" },
+  { value: "52", label: "States analyzed", detail: "Jobs vs. Wages, presented at GMiS" },
+  { value: "100%", label: "Fabrication rate found", detail: "Debate Coach, presented in New Orleans" },
+];
 
 export default function HomePage() {
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative isolate pt-16 pb-20 sm:pt-24 sm:pb-28">
-        {/* Topographic contour clip, drifting on scroll. Brightened so its
-            warm-grey paper reads as our paper, then multiplied so only the
-            contour lines survive, then masked to fade out before it reaches
-            the headline. */}
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <BackgroundVideo
-            src="/video/hero-topo.mp4"
-            poster="/video/hero-topo.jpg"
-            parallax={12}
-            className="absolute -inset-y-[18%] inset-x-0 opacity-[0.42] mix-blend-multiply"
-            videoClassName="h-full w-full object-cover [filter:brightness(1.22)_contrast(1.04)]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/75 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-paper to-transparent" />
-        </div>
+      <Hero />
 
-        <div className="container-site grid items-center gap-14 lg:grid-cols-12">
+      {/* Selected work */}
+      <section className="container-site pt-28 sm:pt-36">
+        <SectionHeading
+          eyebrow="Selected work"
+          lines={["Built to be used,", "not just looked at."]}
+          link={{ label: "All work", href: "/projects" }}
+        />
+        <div className="mt-16 flex flex-col gap-24 sm:gap-32">
+          {featuredProjects.map((project, i) => (
+            <Reveal key={project.slug}>
+              <CaseStudyRow project={project} index={i} flip={i % 2 === 1} />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Process, scroll-bound */}
+      <div className="mt-28 sm:mt-40">
+        <ScrubVideo
+          src="/video/process-scrub.mp4"
+          poster="/video/process-scrub.webp"
+          eyebrow="How a project runs"
+          steps={processSteps}
+        />
+      </div>
+
+      {/* Tracks */}
+      <section className="container-site pt-28 sm:pt-36">
+        <SectionHeading eyebrow="What the studio does" lines={["Three tracks.", "One standard."]} />
+        <Tracks />
+      </section>
+
+      {/* Proof */}
+      <section className="container-site pt-28 sm:pt-36">
+        <Reveal>
+          <div className="grid gap-12 border-t border-line pt-12 sm:grid-cols-2 lg:grid-cols-4">
+            {proof.map((s) => (
+              <StatBlock key={s.label} value={s.value} label={s.label} detail={s.detail} />
+            ))}
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Studio teaser */}
+      <section className="container-site pt-28 sm:pt-36">
+        <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <Reveal>
-              <p className="eyebrow">
-                {site.name} · Full-stack developer &amp; researcher · {site.location}
-              </p>
-            </Reveal>
+            <SectionHeading eyebrow="The studio" lines={["One builder.", "Every detail."]} />
             <Reveal delay={0.1}>
-              <h1 className="mt-6 font-display text-[2.6rem] leading-[1.08] font-semibold tracking-tight sm:text-6xl lg:text-[4.25rem]">
-                I ship real client work, and I{" "}
-                <em className="text-accent">research</em> how people use the
-                tools we build.
-              </h1>
+              <div className="prose-measure mt-8 flex flex-col gap-5">
+                <p>
+                  {site.brand} is run by {site.fullName}, a developer and
+                  researcher in New Jersey. Client work ships from here: ice
+                  cream shops, salons, training gyms, and the studios behind
+                  them. Research happens here too, with findings presented at
+                  GMiS and the UR2PhD showcase in New Orleans.
+                </p>
+                <p>
+                  Small on purpose. You talk to the person who designs, builds,
+                  and maintains the thing.
+                </p>
+              </div>
+              <Link
+                href="/about"
+                className="link-sweep mt-8 inline-block font-mono text-[13px] tracking-[0.08em] text-fg uppercase"
+              >
+                About the studio
+              </Link>
             </Reveal>
+          </div>
+          <div className="lg:col-span-5">
             <Reveal delay={0.2}>
-              <p className="prose-measure mt-6">
-                Next.js sites in production for real businesses, data-driven
-                research presented at GMiS and the UR2PhD showcase in New
-                Orleans, and a habit of finishing what I start.
-              </p>
-            </Reveal>
-            <Reveal delay={0.3}>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/resume" className="btn btn-primary">
-                  View resume
-                </Link>
-                <Link href="/projects" className="btn btn-outline">
-                  View work
-                </Link>
+              {/* PLACEHOLDER: replace with the real photo at /public/about/headshot.jpg
+                  using <Image fill className="object-cover" /> inside this frame. */}
+              <div
+                role="img"
+                aria-label={`Photo of ${site.fullName}, coming soon`}
+                className="relative flex aspect-[4/5] items-end overflow-hidden rounded-[6px] border border-line bg-ink-800 p-6"
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgb(0_229_255_/_0.12),transparent_60%)]"
+                />
+                <p className="relative font-mono text-[11px] tracking-[0.18em] text-fg-faint uppercase">
+                  Portrait / pending
+                </p>
               </div>
             </Reveal>
           </div>
-          <div className="hidden lg:col-span-5 lg:block">
-            <Reveal delay={0.25} y={40}>
-              <HeroViz />
-            </Reveal>
-          </div>
         </div>
-      </section>
-
-      {/* ── Stat strip ───────────────────────────────────────── */}
-      {/* ── Category preview ─────────────────────────────────── */}
-      <section className="container-site py-20 sm:py-28">
-        <Reveal>
-          <SectionHeading
-            eyebrow="What I do"
-            title="Three tracks. One builder."
-          />
-        </Reveal>
-        <CategoryPreviewCards />
-      </section>
-
-      {/* ── Featured work ────────────────────────────────────── */}
-      <section className="container-site pb-20 sm:pb-28">
-        <Reveal>
-          <SectionHeading
-            eyebrow="Featured work"
-            title="Start with these three."
-            link={{ label: "All projects", href: "/projects" }}
-          />
-        </Reveal>
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredProjects.map((project, i) => (
-            <li key={project.slug} className="h-full">
-              <Reveal delay={i * 0.1} className="h-full">
-                <ProjectCard project={project} />
-              </Reveal>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── Right now ────────────────────────────────────────── */}
-      <section className="container-site pb-24 sm:pb-32">
-        <Reveal>
-          <div className="relative isolate overflow-hidden rounded-2xl border hairline p-8 sm:p-10">
-            {/* Ink-in-water clip. The paper scrim is tuned against the clip's
-                darkest pixel, so body copy holds ~5:1 and the accent badges
-                ~6:1, both clear of WCAG AA. */}
-            <div className="pointer-events-none absolute inset-0 -z-10">
-              <BackgroundVideo
-                src="/video/ink-band.mp4"
-                poster="/video/ink-band.jpg"
-                parallax={8}
-                className="absolute -inset-y-[18%] inset-x-0"
-                videoClassName="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-paper/82" />
-            </div>
-
-            <p className="eyebrow">Right now</p>
-            <ul className="mt-6 grid gap-6 md:grid-cols-3">
-              <li className="flex flex-col items-start gap-2.5">
-                <StatusBadge status="in-progress" />
-                <p className="font-semibold">Tedi&rsquo;s Hair Studio rebuild</p>
-                <p className="text-sm leading-relaxed text-ink-soft">
-                  A forest green brand system and custom booking, replacing the
-                  salon&rsquo;s Booksy dependency.
-                </p>
-              </li>
-              <li className="flex flex-col items-start gap-2.5">
-                <StatusBadge status="in-progress" />
-                <p className="font-semibold">Java execution visualizer</p>
-                <p className="text-sm leading-relaxed text-ink-soft">
-                  UR2PhD-REU research: an AI-assisted stack and heap visualizer
-                  for students learning Java.
-                </p>
-              </li>
-              <li className="flex flex-col items-start gap-2.5">
-                <StatusBadge status="in-progress" />
-                <p className="font-semibold">WiCyS Kean chapter website</p>
-                <p className="text-sm leading-relaxed text-ink-soft">
-                  Building the chapter&rsquo;s official site: events,
-                  announcements, and a resource hub.
-                </p>
-              </li>
-            </ul>
-          </div>
-        </Reveal>
       </section>
     </>
   );

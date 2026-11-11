@@ -3,11 +3,15 @@
  * with real values before launch; nothing else references them directly.
  */
 export const site = {
+  /** Studio brand, used for the wordmark, titles, and OG card */
+  brand: "pronelweb",
+  handle: "@pronelweb",
   name: "Vinny",
   fullName: "Vincent Pronel",
-  role: "Full-Stack Developer & Researcher",
+  role: "Digital studio",
+  tagline: "Websites and platforms that earn their keep.",
   positioning:
-    "Full-stack developer and researcher who ships client work and studies how people use the tools he builds.",
+    "pronelweb is the digital studio of Vincent Pronel: production Next.js sites and booking platforms for real businesses, backed by published HCI and data research.",
   email: "vinnypronel050@gmail.com",
   location: "New Jersey",
   // PLACEHOLDER: replace with your real production domain once deployed
@@ -23,8 +27,15 @@ export const site = {
    * Filename the visitor's browser saves the resume as. The `download`
    * attribute on same-origin links forces a save instead of an in-tab
    * preview, so recruiters get a clearly-named file in one click.
-   * (Deliberately not a Content-Disposition header: that would also stop
-   * the /resume page from embedding the PDF inline.)
    */
   resumeDownloadName: "Vincent-Pronel-Resume.pdf",
+  /** Names shown in the hero marquee. All real clients or orgs. */
+  clients: [
+    "Day's Ice Cream",
+    "AIO Training",
+    "Adzio",
+    "Tedi's Hair Studio",
+    "WiCyS Kean",
+    "Kean University",
+  ],
 } as const;

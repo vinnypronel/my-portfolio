@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, getProject, getAdjacentProjects } from "@/data/projects";
-import { categoryMeta } from "@/data/categories";
 import { CategoryTag } from "@/components/CategoryTag";
 import { StatusBadge } from "@/components/StatusBadge";
-import { TechChips } from "@/components/TechChips";
-import { PlaceholderVisual } from "@/components/PlaceholderVisual";
-import { Reveal } from "@/components/Reveal";
+import { ProjectVisual } from "@/components/ProjectVisual";
+import { Reveal, RevealLines } from "@/components/Reveal";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -25,10 +22,7 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: project.oneLiner,
-    openGraph: {
-      title: `${project.title} · Vinny`,
-      description: project.oneLiner,
-    },
+    openGraph: { title: `${project.title} · pronelweb`, description: project.oneLiner },
   };
 }
 
@@ -41,101 +35,80 @@ export default async function ProjectDetailPage({
   const project = getProject(slug);
   if (!project) notFound();
 
-  const meta = categoryMeta[project.category];
-  const { prev, next } = getAdjacentProjects(slug);
+  const { next } = getAdjacentProjects(slug);
 
   const metaRows = [
+    { label: "Client", value: project.client },
     { label: "Role", value: project.role },
     { label: "Team", value: project.team },
-    { label: "Client", value: project.client },
     { label: "Timeframe", value: project.timeframe },
   ].filter((row): row is { label: string; value: string } => Boolean(row.value));
 
   return (
-    <article className="container-site pt-14 pb-8 sm:pt-20">
-      {/* Back link */}
-      <Reveal>
-        <Link
-          href="/projects"
-          className="group inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft hover:text-ink"
-        >
-          <span aria-hidden className="transition-transform duration-300 motion-safe:group-hover:-translate-x-1">
-            ←
-          </span>
-          All work
-        </Link>
-      </Reveal>
-
+    <article>
       {/* Header */}
-      <header className="mt-8 max-w-3xl">
-        <Reveal>
-          <div className="flex flex-wrap items-center gap-2.5">
+      <header className="container-site pt-36 sm:pt-44">
+        <Reveal immediate>
+          <Link
+            href="/projects"
+            className="link-sweep font-mono text-[12px] tracking-[0.12em] text-fg-faint uppercase hover:text-fg"
+          >
+            All work
+          </Link>
+          <div className="mt-10 flex flex-wrap items-center gap-5">
             <CategoryTag category={project.category} full />
             {project.status && <StatusBadge status={project.status} />}
           </div>
-          <h1 className="mt-5 font-display text-4xl font-semibold tracking-tight sm:text-6xl">
-            {project.title}
-          </h1>
-          <p className="prose-measure mt-5">{project.oneLiner}</p>
+        </Reveal>
+        <RevealLines
+          immediate
+          delay={0.1}
+          as="h1"
+          className="display-xl mt-6 max-w-[14ch] font-semibold text-fg"
+          lines={[project.title]}
+        />
+        <Reveal immediate delay={0.35}>
+          <p className="prose-measure mt-8 text-xl">{project.oneLiner}</p>
         </Reveal>
       </header>
 
-      {/* Hero visual */}
-      <Reveal className="mt-12">
-        <div className={`relative aspect-[16/9] overflow-hidden rounded-2xl border ${meta.border}`}>
-          {project.image ? (
-            /* Real screenshot, set via the `image` field in data/projects.ts */
-            <Image
-              src={project.image}
-              alt={project.imageAlt ?? `${project.title} screenshot`}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover"
-            />
-          ) : (
-            /* PLACEHOLDER: drop a screenshot in /public/projects/ and set
-               `image: "/projects/<slug>.png"` on this project in data/projects.ts */
-            <PlaceholderVisual
-              category={project.category}
-              label={project.imageAlt ?? `${project.title}, screenshot coming soon`}
-            />
-          )}
+      {/* Hero visual, full width of the container, wider than the copy */}
+      <Reveal immediate delay={0.45} className="container-site mt-14">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-[6px] border border-line bg-ink-800 sm:aspect-[21/10]">
+          <ProjectVisual project={project} priority sizes="(max-width: 1440px) 100vw, 1440px" />
         </div>
       </Reveal>
 
-      <div className="mt-14 grid gap-14 lg:grid-cols-12">
+      <div className="container-site mt-20 grid gap-16 lg:grid-cols-12">
         {/* Meta sidebar */}
         <aside className="lg:col-span-4">
           <Reveal>
-            <dl className="flex flex-col gap-6 rounded-2xl border hairline bg-paper-deep/50 p-7">
+            <dl className="flex flex-col gap-6 border-t border-line pt-6 lg:sticky lg:top-28">
               {metaRows.map((row) => (
                 <div key={row.label}>
-                  <dt className="eyebrow !text-[10px]">{row.label}</dt>
-                  <dd className="mt-1.5 text-sm leading-relaxed font-medium">
-                    {row.value}
-                  </dd>
+                  <dt className="eyebrow">{row.label}</dt>
+                  <dd className="mt-2 text-sm leading-relaxed text-fg">{row.value}</dd>
                 </div>
               ))}
               <div>
-                <dt className="eyebrow !text-[10px]">Stack</dt>
-                <dd className="mt-2.5">
-                  <TechChips stack={project.stack} />
+                <dt className="eyebrow">Stack</dt>
+                <dd className="mt-2 font-mono text-xs leading-loose tracking-[0.06em] text-fg-soft">
+                  {project.stack.join("  /  ")}
                 </dd>
               </div>
               {project.links.length > 0 && (
                 <div>
-                  <dt className="eyebrow !text-[10px]">Links</dt>
-                  <dd className="mt-2.5 flex flex-col gap-2">
+                  <dt className="eyebrow">Links</dt>
+                  <dd className="mt-2 flex flex-col gap-2">
                     {project.links.map((link) => (
                       <a
                         key={link.href}
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`text-sm font-semibold ${meta.text} hover:underline`}
+                        className="link-sweep w-fit text-sm text-fg hover:text-accent"
                       >
-                        {link.label} ↗
+                        {link.label} &#8599;
                       </a>
                     ))}
                   </dd>
@@ -146,25 +119,23 @@ export default async function ProjectDetailPage({
         </aside>
 
         {/* Body */}
-        <div className="flex flex-col gap-12 lg:col-span-8">
+        <div className="flex flex-col gap-16 lg:col-span-7 lg:col-start-6">
           <Reveal>
             <section>
-              <h2 className="font-display text-2xl font-semibold tracking-tight">
-                The problem
-              </h2>
-              <p className="prose-measure mt-4">{project.problem}</p>
+              <p className="eyebrow">The problem</p>
+              <p className="display-md mt-5 font-medium text-fg">{project.problem}</p>
             </section>
           </Reveal>
 
           <Reveal>
             <section>
-              <h2 className="font-display text-2xl font-semibold tracking-tight">
-                What was built
-              </h2>
-              <ul className="mt-5 flex flex-col gap-3.5">
-                {project.built.map((item) => (
-                  <li key={item} className="flex gap-3 text-[1.0625rem] leading-relaxed text-ink-soft">
-                    <span aria-hidden className={`mt-2.5 size-1.5 shrink-0 rounded-full ${meta.bg}`} />
+              <p className="eyebrow">What was built</p>
+              <ul className="mt-6 flex flex-col divide-y divide-line border-y border-line">
+                {project.built.map((item, i) => (
+                  <li key={item} className="flex gap-6 py-4 text-[1.0625rem] leading-relaxed text-fg-soft">
+                    <span className="shrink-0 font-mono text-xs text-accent">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     {item}
                   </li>
                 ))}
@@ -174,14 +145,12 @@ export default async function ProjectDetailPage({
 
           <Reveal>
             <section>
-              <h2 className="font-display text-2xl font-semibold tracking-tight">
-                Outcome
-              </h2>
-              <ul className="mt-5 flex flex-col gap-3.5">
+              <p className="eyebrow">Outcome</p>
+              <ul className="mt-6 flex flex-col gap-4">
                 {project.outcome.map((item) => (
-                  <li key={item} className="flex gap-3 text-[1.0625rem] leading-relaxed">
-                    <span aria-hidden className={`mt-2.5 size-1.5 shrink-0 rounded-full ${meta.bg}`} />
-                    <span className="font-medium">{item}</span>
+                  <li key={item} className="flex gap-4 text-[1.0625rem] leading-relaxed text-fg">
+                    <span aria-hidden className="mt-3 h-px w-5 shrink-0 bg-accent" />
+                    {item}
                   </li>
                 ))}
               </ul>
@@ -192,19 +161,18 @@ export default async function ProjectDetailPage({
             <Reveal>
               <Link
                 href={project.researchAnchor}
-                className={`group flex items-center justify-between gap-4 rounded-2xl border p-6 transition-all duration-300 ${meta.border} ${meta.bgSoft} hover:shadow-lift motion-safe:hover:-translate-y-1`}
+                className="group flex items-center justify-between gap-4 rounded-[6px] border border-line p-6 transition-colors duration-300 hover:border-accent motion-safe:hover:shadow-glow-soft"
               >
                 <div>
-                  <p className={`text-sm font-semibold ${meta.text}`}>
+                  <p className="font-mono text-[12px] tracking-[0.12em] text-fg uppercase">
                     Full research narrative
                   </p>
-                  <p className="mt-1 text-sm text-ink-soft">
-                    Methodology, findings, and presentation history on the
-                    Research page.
+                  <p className="mt-1.5 text-sm text-fg-soft">
+                    Methodology, findings, and presentation history on the Research page.
                   </p>
                 </div>
-                <span aria-hidden className={`text-xl ${meta.text} transition-transform duration-300 motion-safe:group-hover:translate-x-1`}>
-                  →
+                <span aria-hidden className="font-mono text-xl text-fg-faint transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent">
+                  &#8594;
                 </span>
               </Link>
             </Reveal>
@@ -212,27 +180,25 @@ export default async function ProjectDetailPage({
         </div>
       </div>
 
-      {/* Prev / next */}
-      <nav aria-label="More projects" className="mt-20 grid gap-4 border-t hairline pt-8 sm:grid-cols-2">
-        {prev && (
-          <Link
-            href={`/projects/${prev.slug}`}
-            className="group rounded-2xl border border-line bg-cream p-6 transition-all duration-300 hover:shadow-lift motion-safe:hover:-translate-y-1"
-          >
-            <p className="eyebrow !text-[10px]">← Previous</p>
-            <p className="mt-2 font-display text-lg font-semibold">{prev.title}</p>
+      {/* Next project */}
+      {next && (
+        <Reveal className="container-site mt-32">
+          <Link href={`/projects/${next.slug}`} className="group block border-t border-line pt-8">
+            <p className="eyebrow">Next project</p>
+            <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
+              <h2 className="display-xl font-semibold text-fg transition-colors duration-300 group-hover:text-accent">
+                {next.title}
+              </h2>
+              <span
+                aria-hidden
+                className="font-mono text-4xl text-fg-faint transition-all duration-500 group-hover:translate-x-2 group-hover:text-accent"
+              >
+                &#8594;
+              </span>
+            </div>
           </Link>
-        )}
-        {next && (
-          <Link
-            href={`/projects/${next.slug}`}
-            className="group rounded-2xl border border-line bg-cream p-6 text-right transition-all duration-300 hover:shadow-lift motion-safe:hover:-translate-y-1 sm:col-start-2"
-          >
-            <p className="eyebrow !text-[10px]">Next →</p>
-            <p className="mt-2 font-display text-lg font-semibold">{next.title}</p>
-          </Link>
-        )}
-      </nav>
+        </Reveal>
+      )}
     </article>
   );
 }

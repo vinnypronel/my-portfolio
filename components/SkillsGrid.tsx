@@ -1,29 +1,17 @@
 import { skillGroups } from "@/data/skills";
 
-/** Categorized skills: grouped list per PRD 6.6, not a flat cloud. */
+/** Categorized skills as mono lists, no chips. */
 export function SkillsGrid() {
   return (
-    <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-      {skillGroups.map((group, i) => {
+    <div className="grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      {skillGroups.map((group) => {
         const exploring = group.label === "Currently exploring";
         return (
-          <div
-            key={group.label}
-            className={i === skillGroups.length - 1 ? "sm:col-span-2" : ""}
-          >
-            <h3 className="eyebrow">{group.label}</h3>
-            <ul className="mt-3 flex flex-wrap gap-2">
+          <div key={group.label} className="border-t border-line pt-5">
+            <h3 className={`eyebrow ${exploring ? "text-accent" : ""}`}>{group.label}</h3>
+            <ul className="mt-4 flex flex-col gap-1.5 text-[15px] text-fg">
               {group.skills.map((skill) => (
-                <li
-                  key={skill}
-                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium ${
-                    exploring
-                      ? "border-accent/25 bg-accent/8 text-accent-deep"
-                      : "border-line bg-cream text-ink"
-                  }`}
-                >
-                  {skill}
-                </li>
+                <li key={skill}>{skill}</li>
               ))}
             </ul>
           </div>

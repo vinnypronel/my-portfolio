@@ -1,35 +1,36 @@
 import Link from "next/link";
+import { RevealLines } from "./Reveal";
 
 /** Eyebrow + display heading, with an optional "view all" style link. */
 export function SectionHeading({
   eyebrow,
   title,
+  lines,
   link,
 }: {
   eyebrow: string;
-  title: string;
+  /** single-line title; or pass `lines` for a deliberate multi-line reveal */
+  title?: string;
+  lines?: string[];
   link?: { label: string; href: string };
 }) {
+  const content = lines ?? (title ? [title] : []);
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="flex flex-wrap items-end justify-between gap-6 border-t border-line pt-6">
       <div>
         <p className="eyebrow">{eyebrow}</p>
-        <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-          {title}
-        </h2>
+        <RevealLines
+          as="h2"
+          lines={content}
+          className="display-lg mt-5 font-semibold text-fg"
+        />
       </div>
       {link && (
         <Link
           href={link.href}
-          className="group mb-1 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent-deep"
+          className="link-sweep mb-2 font-mono text-[13px] tracking-[0.08em] text-fg-soft uppercase transition-colors hover:text-fg"
         >
           {link.label}
-          <span
-            aria-hidden
-            className="transition-transform duration-300 motion-safe:group-hover:translate-x-1"
-          >
-            →
-          </span>
         </Link>
       )}
     </div>

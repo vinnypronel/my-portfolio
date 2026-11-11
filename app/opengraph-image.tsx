@@ -6,7 +6,7 @@ import { site } from "@/data/site";
  * LinkedIn/Discord/iMessage get a branded card with zero extra config.
  */
 export const runtime = "edge";
-export const alt = `${site.name} · ${site.role}`;
+export const alt = `${site.brand} · ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -21,32 +21,25 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          backgroundColor: "#1b150d",
-          color: "#fbf8f2",
-          fontFamily: "Georgia, serif",
+          backgroundColor: "#050507",
+          color: "#f2f2f5",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          backgroundImage:
+            "radial-gradient(ellipse at 80% 20%, rgba(0,229,255,0.16), transparent 55%)",
         }}
       >
-        <div style={{ display: "flex", gap: 12 }}>
-          <div style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "#4fd8dd" }} />
-          <div style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "#ff9a6b" }} />
-          <div style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "#f487cd" }} />
+        <div style={{ display: "flex", fontSize: 28, letterSpacing: 2 }}>
+          {site.brand}
+          <span style={{ color: "#00e5ff" }}>.</span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ fontSize: 96, fontWeight: 600, letterSpacing: -3, display: "flex" }}>
-            {site.name}
-            <span style={{ color: "#a5a0ff" }}>.</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div style={{ fontSize: 88, fontWeight: 700, letterSpacing: -4, lineHeight: 0.98, display: "flex", flexDirection: "column" }}>
+            <span>Websites that sell.</span>
+            <span>Platforms that run themselves.</span>
           </div>
-          <div
-            style={{
-              fontSize: 34,
-              color: "rgba(251, 248, 242, 0.75)",
-              fontFamily: "Helvetica, Arial, sans-serif",
-              maxWidth: 900,
-            }}
-          >
-            Full-stack developer &amp; researcher. Client work shipped,
-            findings presented.
+          <div style={{ fontSize: 28, color: "rgba(242,242,245,0.6)", maxWidth: 900 }}>
+            Production Next.js sites and booking platforms for real businesses.
           </div>
         </div>
 
@@ -54,12 +47,12 @@ export default function OpenGraphImage() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            fontSize: 24,
-            color: "rgba(251, 248, 242, 0.5)",
-            fontFamily: "Helvetica, Arial, sans-serif",
+            fontSize: 22,
+            letterSpacing: 2,
+            color: "rgba(242,242,245,0.45)",
           }}
         >
-          <div>Research · Freelance · Leadership</div>
+          <div>DIGITAL STUDIO · NEW JERSEY</div>
           <div>{site.url.replace("https://", "")}</div>
         </div>
       </div>

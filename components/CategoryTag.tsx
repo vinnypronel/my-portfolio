@@ -1,24 +1,20 @@
 import { categoryMeta, type Category } from "@/data/categories";
 
 /**
- * Color-coded category label used on cards, detail pages, and the research
- * page. Deliberately just tracked, colored type: no pill, no outline, no dot.
- * The color alone carries the category, matching how the accent system is used
- * everywhere else on the site.
+ * Category label used on cards, detail pages, and the research page.
+ * Tracked mono caps, no pill, no outline, no color: the label alone carries it.
  */
 export function CategoryTag({
   category,
   full = false,
 }: {
   category: Category;
-  /** use the full label ("Freelance & Client Work") instead of the short one */
+  /** use the full label ("Hackathons & Leadership") instead of the short one */
   full?: boolean;
 }) {
   const meta = categoryMeta[category];
   return (
-    <span
-      className={`text-[11px] font-semibold tracking-[0.14em] uppercase ${meta.text}`}
-    >
+    <span className="font-mono text-[11px] tracking-[0.18em] text-fg-soft uppercase">
       {full ? meta.label : meta.shortLabel}
     </span>
   );

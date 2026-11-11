@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { ProjectsExplorer } from "@/components/ProjectsExplorer";
-import { Reveal } from "@/components/Reveal";
-import type { Filter } from "@/components/CategoryFilterPills";
+import { ProjectsExplorer, type Filter } from "@/components/ProjectsExplorer";
+import { Reveal, RevealLines } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Research, freelance client builds, and hackathon & leadership work, filterable by category.",
+    "Client builds, research, and hackathon and leadership work, filterable by category.",
   openGraph: {
-    title: "Work · Vinny",
+    title: "Work · pronelweb",
     description:
-      "Research, freelance client builds, and hackathon & leadership work, filterable by category.",
+      "Client builds, research, and hackathon and leadership work, filterable by category.",
   },
 };
 
@@ -22,24 +21,28 @@ export default async function ProjectsPage({
   searchParams: Promise<{ cat?: string }>;
 }) {
   const { cat } = await searchParams;
-  const initialFilter: Filter = validFilters.includes(cat as Filter)
-    ? (cat as Filter)
-    : "all";
+  const initialFilter: Filter = validFilters.includes(cat as Filter) ? (cat as Filter) : "all";
 
   return (
-    <div className="container-site pt-16 pb-8 sm:pt-24">
-      <Reveal>
+    <div className="container-site pt-36 pb-8 sm:pt-44">
+      <Reveal immediate>
         <p className="eyebrow">Work</p>
-        <h1 className="mt-4 max-w-[16ch] font-display text-4xl font-semibold tracking-tight sm:text-6xl">
-          Everything, in one grid.
-        </h1>
-        <p className="prose-measure mt-5">
-          Research, client builds, and competition work side by side. Filter
-          by category, or scan it all. Featured projects always lead.
+      </Reveal>
+      <RevealLines
+        immediate
+        delay={0.1}
+        as="h1"
+        className="display-xl mt-6 font-semibold text-fg"
+        lines={["Everything,", "in one grid."]}
+      />
+      <Reveal immediate delay={0.4}>
+        <p className="prose-measure mt-8">
+          Client builds, research, and competition work side by side. Filter by
+          category or scan it all. Featured projects always lead.
         </p>
       </Reveal>
 
-      <div className="mt-12">
+      <div className="mt-16">
         <ProjectsExplorer initialFilter={initialFilter} />
       </div>
     </div>

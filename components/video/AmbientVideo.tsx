@@ -4,21 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 /**
- * Decorative looping background video.
+ * Decorative looping background video for below-the-fold sections.
  *
- * Behaviour that keeps it cheap and accessible:
  *  - nothing downloads until the element is near the viewport (preload="none"
- *    plus an IntersectionObserver that sets `src` on first approach)
+ *    plus a rect check that sets `src` on first approach)
  *  - playback pauses whenever it scrolls out of view
- *  - `mode="manual"` defers play/pause to the `active` prop (used for hover cards)
- *  - under prefers-reduced-motion no video loads at all; the poster still renders
+ *  - `mode="manual"` defers play/pause to the `active` prop (hover cards)
+ *  - under prefers-reduced-motion no video loads at all; the poster renders
  *  - always aria-hidden: these carry no information
- *
- * Source clips live in /public/video (processed from the Gemini originals in
- * "Video Backgrounds/": cropped to strip the sparkle watermark, then
- * crossfaded into a seamless 9s loop).
  */
-export function BackgroundVideo({
+export function AmbientVideo({
   src,
   poster,
   className = "",
@@ -49,22 +44,13 @@ export function BackgroundVideo({
     target: wrapRef,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [`${-parallax}%`, `${parallax}%`]
-  );
+  const y = useTransform(scrollYProgress, [0, 1], [`${-parallax}%`, `${parallax}%`]);
 
   useEffect(() => {
     const el = wrapRef.current;
     if (!el || reduce) return;
 
-    // Deliberately a rect check rather than IntersectionObserver: it resolves
-    // synchronously on mount (so a clip already on screen at load starts
-    // without waiting for an async callback) and behaves identically in
-    // embedded/offscreen renderers where IO never reports.
-    const MARGIN = 200;
-
+    const MARGIN = 300;
     const check = () => {
       const r = el.getBoundingClientRect();
       const visible =
@@ -72,10 +58,8 @@ export function BackgroundVideo({
         r.top < window.innerHeight + MARGIN &&
         r.right > 0 &&
         r.left < window.innerWidth;
-
-      // Functional updates so an unchanged value bails out of re-rendering.
       setInView((prev) => (prev === visible ? prev : visible));
-      if (visible) setCanLoad((prev) => prev || true);
+      if (visible) setCanLoad(true);
     };
 
     check();
@@ -90,10 +74,7 @@ export function BackgroundVideo({
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !canLoad) return;
-
     if (inView && (mode === "in-view" || active)) {
-      // Autoplay can still be refused (e.g. battery saver); failing is fine,
-      // the poster stays visible underneath.
       video.play().catch(() => {});
     } else {
       video.pause();

@@ -1,23 +1,20 @@
-/** Big number + label. Used on the homepage stat strip and the research page. */
+/** Big number + label. Numbers only ever come from real project data. */
 export function StatBlock({
   value,
   label,
-  accentClass = "text-accent",
+  detail,
 }: {
   value: string;
   label: string;
-  accentClass?: string;
+  detail?: string;
 }) {
   return (
-    <div className="flex flex-col gap-2">
-      <span
-        className={`font-display text-5xl font-semibold tracking-tight sm:text-6xl ${accentClass}`}
-      >
-        {value}
-      </span>
-      <span className="max-w-[22ch] text-sm leading-snug text-ink-soft">
+    <div className="flex flex-col gap-3 border-l border-line pl-6">
+      <span className="display-lg font-semibold tracking-tight text-fg">{value}</span>
+      <span className="font-mono text-[11px] tracking-[0.18em] text-fg-soft uppercase">
         {label}
       </span>
+      {detail && <span className="max-w-[26ch] text-sm leading-snug text-fg-faint">{detail}</span>}
     </div>
   );
 }
