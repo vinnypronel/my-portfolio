@@ -99,18 +99,16 @@ export default function AboutPage() {
 
         {/* Photo */}
         <div className="lg:col-span-5 lg:justify-self-end">
-          <Reveal immediate delay={0.3}>
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[6px] border border-line bg-ink-800 lg:mx-0">
-              <Image
-                src="/about/headshot.jpg"
-                alt={`${site.fullName}, founder of ${site.brand}`}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover object-top"
-              />
-            </div>
-          </Reveal>
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[6px] border border-line bg-ink-800 lg:mx-0">
+            <Image
+              src="/about/headshot.jpg"
+              alt={`${site.fullName}, independent web developer`}
+              fill
+              priority
+              sizes="(max-width: 1024px) 90vw, 32vw"
+              className="object-cover object-top"
+            />
+          </div>
         </div>
       </div>
 
